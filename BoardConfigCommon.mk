@@ -134,6 +134,9 @@ TARGET_KERNEL_CONFIG := xiaomi_msm8974_defconfig
 # Lights
 TARGET_PROVIDES_LIBLIGHT := true
 
+# Memfd
+TARGET_HAS_MEMFD_BACKPORT := true
+
 # Partitions
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
