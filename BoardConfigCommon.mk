@@ -131,9 +131,6 @@ TARGET_KERNEL_SOURCE := kernel/xiaomi/msm8974
 TARGET_KERNEL_ARCH := arm
 TARGET_KERNEL_CONFIG := xiaomi_msm8974_defconfig
 
-# Lights
-TARGET_PROVIDES_LIBLIGHT := true
-
 # Memfd
 TARGET_HAS_MEMFD_BACKPORT := true
 
