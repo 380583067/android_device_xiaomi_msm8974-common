@@ -18,6 +18,7 @@ cc_binary {
     defaults: ["hidl_defaults"],
     name: "android.hardware.light@2.0-service.xiaomi_msm8974",
     init_rc: ["android.hardware.light@2.0-service.xiaomi_msm8974.rc"],
+    vintf_fragments: ["android.hardware.light@2.0-service.xiaomi_msm8974.xml"],
     srcs: ["service.cpp", "Light.cpp"],
     shared_libs: [
         "libhardware",
