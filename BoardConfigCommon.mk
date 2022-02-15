@@ -130,6 +130,8 @@ BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x02000000 --tags_offset 0x01E00000
 TARGET_KERNEL_SOURCE := kernel/xiaomi/msm8974
 TARGET_KERNEL_ARCH := arm
 TARGET_KERNEL_CONFIG := xiaomi_msm8974_defconfig
+TARGET_KERNEL_ADDITIONAL_FLAGS := \
+    HOSTCFLAGS="-fuse-ld=lld -Wno-unused-command-line-argument"
 
 # Memfd
 TARGET_HAS_MEMFD_BACKPORT := true
