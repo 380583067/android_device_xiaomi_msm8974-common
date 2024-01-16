@@ -21,14 +21,6 @@ if [ ! -f "${HELPER}" ]; then
 fi
 source "${HELPER}"
 
-function blob_fixup() {
-    case "${1}" in
-        vendor/lib/mediadrm/libwvdrmengine.so)
-            patchelf --replace-needed libprotobuf-cpp-lite.so libprotobuf-cpp-lite-v29.so "${2}"
-            ;;
-    esac
-}
-
 # Default to sanitizing the vendor folder before extraction
 CLEAN_VENDOR=true
 
@@ -93,4 +85,4 @@ if [ -z "${ONLY_COMMON}" ] && [ -z "${ONLY_DEVICE_COMMON}" ] && [ -s "${MY_DIR}/
     extract "${MY_DIR}/../${DEVICE}/proprietary-files.txt" "${SRC}" "${KANG}" --section "${SECTION}"
 fi
 
-"${MY_DIR}/setup-makefiles.sh"
+"${MY_DIR}/setup-makefiles.sh

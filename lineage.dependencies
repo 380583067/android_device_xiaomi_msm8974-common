@@ -4,8 +4,8 @@
    "target_path": "vendor/xiaomi/msm8974-common"
  },
  {
-   "repository": "android_kernel_xiaomi_msm8974",
-   "target_path": "kernel/xiaomi/msm8974"
+   "repository": "android_kernel_xiaomi_virgo",
+   "target_path": "kernel/xiaomi/virgo"
     },
   {
     "repository": "android_hardware_sony_timekeep",

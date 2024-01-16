@@ -127,4 +127,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     debug.sf.latch_unsignaled=1 \
-    debug.sf.disable_backpressure=1
+    debug.sf.disable_backpressure=1 \
+    debug.sf.enable_gl_backpressure=1
+
+# Maintainer
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.mk.maintainer=guaiyihu
