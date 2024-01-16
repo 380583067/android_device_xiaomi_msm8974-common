@@ -406,6 +406,10 @@ on post-fs-data
     mkdir /data/fota 0771
     chown system system /data/fota
 
+    # Create /data/time folder for time-services
+    mkdir /data/time/ 0700 system system
+    restorecon_recursive /data/time
+
     mkdir /data/audio/ 0770 media audio
 
     setprop vold.post_fs_data_done 1
@@ -582,7 +586,7 @@ service ril-daemon3 /system/vendor/bin/hw/rild -c 3
     disabled
     group radio cache inet misc audio sdcard_r sdcard_rw diag oem_2950 log net_raw
 
-service charger /system/bin/chargeonlymode
+service charger /system/bin/charger
     class charger
     group system graphics
     seclabel u:r:charger:s0
