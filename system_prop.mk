@@ -1,3 +1,15 @@
+# Art
+PRODUCT_PROPERTY_OVERRIDES += \
+    dalvik.vm.boot-dex2oat-threads=4 \
+    dalvik.vm.boot-dex2oat-cpu-set=0,1,2,3 \
+    dalvik.vm.dex2oat64.enabled=false \
+    dalvik.vm.dex2oat-cpu-set=0,1,2,3 \
+    dalvik.vm.dex2oat-filter=speed \
+    dalvik.vm.dex2oat-swap=false \
+    dalvik.vm.image-dex2oat-cpu-set=0,1,2,3 \
+    dalvik.vm.image-dex2oat-threads=4 \
+    ro.sys.fw.dex2oat_thread_count=4
+
 # Dalvik heap
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.heapstartsize=16m \
@@ -101,7 +113,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.opengles.version=196609 \
     persist.hwc.mdpcomp.enable=true \
     persist.timed.enable=true \
-    persist.sys.wfd.virtual=0 \
+    persist.sys.wfd.virtual=0
 
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.camera.cpp.duplication=false \
@@ -129,3 +141,24 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.sf.latch_unsignaled=1 \
     debug.sf.disable_backpressure=1 \
     debug.sf.enable_gl_backpressure=1
+
+# S Bringup
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.kernel.ebpf.supported=false \
+    debug.renderengine.backend=threaded \
+    persist.sys.binary_xml=false \
+    ro.vndk.version=current \
+    ro.soc.manufacturer=Qualcomm \
+    ro.soc.model=MSM8974
+
+# EGL
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.hardware.egl=adreno \
+    ro.hardware=msm8974
+
+# SafetyNet
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.config.net.snet=false \
+    persist.sys.snet.enable=false \
+    ro.oem_unlock_supported=1
+

@@ -27,6 +27,10 @@ TARGET_BOOTLOADER_BOARD_NAME := MSM8974
 TARGET_NO_BOOTLOADER         := true
 TARGET_NO_RADIOIMAGE         := true
 
+# Build
+BUILD_BROKEN_PREBUILT_ELF_FILES := true
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+
 # Platform
 TARGET_BOARD_PLATFORM     := msm8974
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno330
@@ -44,6 +48,8 @@ TARGET_CPU_VARIANT_RUNTIME := krait
 BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
 
 # Audio
+BOARD_USES_LEGACY_AUDIO_POLICY := true
+TARGET_EXCLUDE_AUDIO_SOUND_TRIGGER := true
 BOARD_USES_ALSA_AUDIO                      := true
 USE_CUSTOM_AUDIO_POLICY                    := 1
 USE_XML_AUDIO_POLICY_CONF := 1
@@ -58,7 +64,7 @@ AUDIO_FEATURE_ENABLED_FLUENCE              := true
 AUDIO_FEATURE_ENABLED_HFP                  := true
 AUDIO_FEATURE_ENABLED_PROXY_DEVICE         := true
 AUDIO_FEATURE_ENABLED_USBAUDIO             := true
-AUDIO_FEATURE_ENABLED_SPKR_PROTECTION      := true
+AUDIO_FEATURE_ENABLED_SPKR_PROTECTION      := false
 AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
 
 # Binder API version
@@ -72,6 +78,8 @@ QCOM_BT_USE_SMD_TTY                         := true
 BLUETOOTH_HCI_USE_MCT                       := true
 
 # Camera
+TARGET_HAS_LEGACY_CAMERA := true
+BOARD_USES_LEGACY_CAMERA_HAL := true
 TARGET_NEEDS_LEGACY_CAMERA_HAL1_DYN_NATIVE_HANDLE := true
 TARGET_USES_MEDIA_EXTENSIONS           := true
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
@@ -98,6 +106,9 @@ TARGET_FS_CONFIG_GEN := $(PLATFORM_PATH)/config.fs
 # Fonts
 USE_REDUCED_CJK_FONT_WEIGHTS := true
 
+# Getrandom
+TARGET_BORINGSSL_USE_URANDOM := true
+
 # GPS
 TARGET_GPS_HAL_PATH         := $(PLATFORM_PATH)/gps
 TARGET_PROVIDES_GPS_LOC_API := true
@@ -120,18 +131,19 @@ DEVICE_MANIFEST_FILE := $(PLATFORM_PATH)/manifest.xml
 DEVICE_MATRIX_FILE := $(PLATFORM_PATH)/compatibility_matrix.xml
 
 # Kernel
-BOARD_KERNEL_CMDLINE               := console=none vmalloc=340M androidboot.hardware=qcom msm_rtb.filter=0x3b7 ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1
-# BOARD_KERNEL_CMDLINE               += androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE               := vmalloc=340M androidboot.hardware=qcom msm_rtb.filter=0x3b7 ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1 androidboot.selinux=permissive
 LZMA_RAMDISK_TARGETS               := boot,recovery
 BOARD_KERNEL_SEPARATED_DT          := true
 BOARD_KERNEL_BASE                  := 0x00000000
 BOARD_KERNEL_PAGESIZE              := 2048
 BOARD_KERNEL_IMAGE_NAME            := zImage
 BOARD_MKBOOTIMG_ARGS               := --ramdisk_offset 0x02000000 --tags_offset 0x01E00000
-TARGET_KERNEL_SOURCE               := kernel/xiaomi/virgo
+TARGET_KERNEL_SOURCE               := kernel/xiaomi/cancro-3.10
 TARGET_KERNEL_ARCH                 := arm
-TARGET_KERNEL_CONFIG               := virgo_defconfig
+TARGET_KERNEL_CONFIG               := cyanogen_cancro_defconfig
 BOARD_DTBTOOL_ARGS                 := -2
+TARGET_KERNEL_CLANG_COMPILE        := false
+TARGET_KERNEL_ADDITIONAL_FLAGS := HOSTCFLAGS="-fuse-ld=lld -Wno-unused-command-line-argument"
 
 # Lights
 TARGET_PROVIDES_LIBLIGHT := true
@@ -145,9 +157,9 @@ TARGET_USERIMAGES_USE_F2FS          := true
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE   := ext4
 BOARD_PERSISTIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_BOOTIMAGE_PARTITION_SIZE      := 16384000
-BOARD_RECOVERYIMAGE_PARTITION_SIZE  := 18384000
-BOARD_SYSTEMIMAGE_PARTITION_SIZE    := 1342177280
-BOARD_USERDATAIMAGE_PARTITION_SIZE  := 13291503000
+BOARD_RECOVERYIMAGE_PARTITION_SIZE  := 32768000
+BOARD_SYSTEMIMAGE_PARTITION_SIZE    := 2416435072
+BOARD_USERDATAIMAGE_PARTITION_SIZE  := 11196694528
 BOARD_CACHEIMAGE_PARTITION_SIZE     := 393216000
 BOARD_PERSISTIMAGE_PARTITION_SIZE   := 16384000
 BOARD_FLASH_BLOCK_SIZE              := 131072
@@ -175,12 +187,15 @@ TARGET_RECOVERY_LCD_BACKLIGHT_PATH := \"/sys/class/leds/lcd-backlight/brightness
 VENDOR_SECURITY_PATCH := 2017-06-01
 
 # SELinux
-include device/qcom/sepolicy-legacy/sepolicy.mk
-BOARD_SEPOLICY_DIRS += $(PLATFORM_PATH)/sepolicy
+#include device/qcom/sepolicy-legacy/sepolicy.mk
+#BOARD_SEPOLICY_DIRS += $(PLATFORM_PATH)/sepolicy
+BOARD_SEPOLICY_DIRS += $(PLATFORM_PATH)/sepolicy-minimal
+SELINUX_IGNORE_NEVERALLOWS := true
 
-# Shims
+# Shim
 TARGET_LD_SHIM_LIBS := \
-    /system/vendor/lib/libril-qc-qmi-1.so|libaudioclient_shim.so
+    /system/vendor/lib/libril-qc-qmi-1.so|libaudioclient_shim.so \
+    /system/vendor/lib/libmm-abl.so|libshims_thermal.so
 
 # Time service
 BOARD_USES_QC_TIME_SERVICES := true
