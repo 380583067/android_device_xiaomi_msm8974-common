@@ -60,10 +60,10 @@ on fs
 
 on post-fs-data
     mkdir /data/tombstones 0771 system system
-    mkdir /tombstones/modem 0771 system system
-    mkdir /tombstones/lpass 0771 system system
-    mkdir /tombstones/wcnss 0771 system system
-    mkdir /tombstones/dsps 0771 system system
+    mkdir /data/tombstones/modem 0771 system system
+    mkdir /data/tombstones/lpass 0771 system system
+    mkdir /data/tombstones/wcnss 0771 system system
+    mkdir /data/tombstones/dsps 0771 system system
     chmod 777 /data/qmi-framework-tests/qmi_xiaomi_id_test
     mkdir /persist/property 0700 root root
 
@@ -144,7 +144,7 @@ on property:persist.usb.chgdisabled=0
     chown nfc nfc /data/nfc
     chown nfc nfc /data/nfc/param
 
-#start camera server as daemon
+# start camera server as daemon
 service qcamerasvr /vendor/bin/mm-qcamera-daemon
     class late_start
     user camera

@@ -44,15 +44,16 @@ TARGET_CPU_SMP      := true
 TARGET_CPU_VARIANT  := generic
 TARGET_CPU_VARIANT_RUNTIME := krait
 
+# Allow duplicate rules to override them
+BUILD_BROKEN_DUP_RULES := true
+
 # ANT+
 BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
 
 # Audio
-BOARD_USES_LEGACY_AUDIO_POLICY := true
-TARGET_EXCLUDE_AUDIO_SOUND_TRIGGER := true
 BOARD_USES_ALSA_AUDIO                      := true
 USE_CUSTOM_AUDIO_POLICY                    := 1
-USE_XML_AUDIO_POLICY_CONF := 1
+USE_XML_AUDIO_POLICY_CONF                  := 1
 TARGET_USES_QCOM_MM_AUDIO                  := true
 AUDIO_FEATURE_ENABLED_COMPRESS_VOIP        := true
 AUDIO_FEATURE_ENABLED_EXTENDED_COMPRESS_FORMAT := true
@@ -64,7 +65,7 @@ AUDIO_FEATURE_ENABLED_FLUENCE              := true
 AUDIO_FEATURE_ENABLED_HFP                  := true
 AUDIO_FEATURE_ENABLED_PROXY_DEVICE         := true
 AUDIO_FEATURE_ENABLED_USBAUDIO             := true
-AUDIO_FEATURE_ENABLED_SPKR_PROTECTION      := false
+AUDIO_FEATURE_ENABLED_SPKR_PROTECTION      := true
 AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
 
 # Binder API version
@@ -77,22 +78,25 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(PLATFORM_PATH)/bluetooth
 QCOM_BT_USE_SMD_TTY                         := true
 BLUETOOTH_HCI_USE_MCT                       := true
 
-# Camera
-TARGET_HAS_LEGACY_CAMERA := true
-BOARD_USES_LEGACY_CAMERA_HAL := true
-TARGET_NEEDS_LEGACY_CAMERA_HAL1_DYN_NATIVE_HANDLE := true
-TARGET_USES_MEDIA_EXTENSIONS           := true
-TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
-USE_DEVICE_SPECIFIC_CAMERA             := true
-TARGET_PROCESS_SDK_VERSION_OVERRIDE := \
-    /system/vendor/bin/mm-qcamera-daemon=23
-
 # Charger
 BOARD_CHARGER_ENABLE_SUSPEND := true
 
 # Crypto
 TARGET_HW_DISK_ENCRYPTION := true
 TARGET_LEGACY_HW_DISK_ENCRYPTION := true
+
+# Dexpreopt
+ifeq ($(HOST_OS),linux)
+  ifneq ($(TARGET_BUILD_VARIANT),eng)
+    WITH_DEXPREOPT := true
+    WITH_DEXPREOPT_DEBUG_INFO := false
+    USE_DEX2OAT_DEBUG := false
+    WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := false
+    PRODUCT_DEX_PREOPT_BOOT_COMPILER_FILTER := speed
+    PRODUCT_USE_COMPACT_DEX := true
+    WITH_DEX_PREOPT_GENERATE_APP_IMAGE := true
+  endif
+endif
 
 # Extended filesystem support
 TARGET_EXFAT_DRIVER := sdfat
@@ -105,9 +109,6 @@ TARGET_FS_CONFIG_GEN := $(PLATFORM_PATH)/config.fs
 
 # Fonts
 USE_REDUCED_CJK_FONT_WEIGHTS := true
-
-# Getrandom
-TARGET_BORINGSSL_USE_URANDOM := true
 
 # GPS
 TARGET_GPS_HAL_PATH         := $(PLATFORM_PATH)/gps
@@ -131,7 +132,7 @@ DEVICE_MANIFEST_FILE := $(PLATFORM_PATH)/manifest.xml
 DEVICE_MATRIX_FILE := $(PLATFORM_PATH)/compatibility_matrix.xml
 
 # Kernel
-BOARD_KERNEL_CMDLINE               := vmalloc=340M androidboot.hardware=qcom msm_rtb.filter=0x3b7 ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1 androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE               := random.trust_cpu=on vmalloc=340M androidboot.hardware=qcom msm_rtb.filter=0x3b7 ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1 androidboot.selinux=permissive
 LZMA_RAMDISK_TARGETS               := boot,recovery
 BOARD_KERNEL_SEPARATED_DT          := true
 BOARD_KERNEL_BASE                  := 0x00000000
@@ -187,9 +188,8 @@ TARGET_RECOVERY_LCD_BACKLIGHT_PATH := \"/sys/class/leds/lcd-backlight/brightness
 VENDOR_SECURITY_PATCH := 2017-06-01
 
 # SELinux
-#include device/qcom/sepolicy-legacy/sepolicy.mk
-#BOARD_SEPOLICY_DIRS += $(PLATFORM_PATH)/sepolicy
-BOARD_SEPOLICY_DIRS += $(PLATFORM_PATH)/sepolicy-minimal
+include device/qcom/sepolicy-legacy/sepolicy.mk
+BOARD_SEPOLICY_DIRS += $(PLATFORM_PATH)/sepolicy
 SELINUX_IGNORE_NEVERALLOWS := true
 
 # Shim
@@ -221,10 +221,7 @@ WIFI_DRIVER_FW_PATH_STA          := "sta"
 WIFI_DRIVER_FW_PATH_AP           := "ap"
 WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
 TARGET_PROVIDES_WCNSS_QMI        := true
-TARGET_USES_QCOM_WCNSS_QMI       := true
+TARGET_USES_QCOM_WCNSS_QMI       := false
 TARGET_USES_WCNSS_CTRL           := true
-
-# Dexpreopt
-WITH_DEXPREOPT_DEBUG_INFO := false
 
 -include vendor/xiaomi/msm8974-common/BoardConfigVendor.mk

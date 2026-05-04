@@ -1,8 +1,8 @@
 <manifest version="1.0" type="device" target-level="legacy">
     <hal format="hidl">
         <name>android.hardware.audio</name>
-        <transport>hwbinder</transport>
-        <version>7.0</version>
+        <transport arch="32">passthrough</transport>
+        <version>6.0</version>
         <interface>
             <name>IDevicesFactory</name>
             <instance>default</instance>
@@ -10,8 +10,8 @@
     </hal>
     <hal format="hidl">
         <name>android.hardware.audio.effect</name>
-        <transport>hwbinder</transport>
-        <version>7.0</version>
+        <transport arch="32">passthrough</transport>
+        <version>6.0</version>
         <interface>
             <name>IEffectsFactory</name>
             <instance>default</instance>
@@ -24,20 +24,6 @@
         <interface>
             <name>IBluetoothHci</name>
             <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="hidl">
-        <name>android.hardware.broadcastradio</name>
-        <transport arch="32">passthrough</transport>
-        <version>1.0</version>
-    </hal>
-    <hal format="hidl">
-        <name>android.hardware.camera.provider</name>
-        <transport arch="32">passthrough</transport>
-        <version>2.4</version>
-        <interface>
-            <name>ICameraProvider</name>
-            <instance>legacy/0</instance>
         </interface>
     </hal>
     <hal format="hidl">
@@ -64,7 +50,7 @@
     </hal>
     <hal format="hidl">
         <name>android.hardware.gnss</name>
-        <transport arch="32">passthrough</transport>
+        <transport>hwbinder</transport>
         <version>1.0</version>
         <interface>
             <name>IGnss</name>
@@ -83,6 +69,7 @@
     <hal format="hidl">
         <name>android.hardware.graphics.composer</name>
         <transport>hwbinder</transport>
+        <impl level="generic"></impl>
         <version>2.1</version>
         <interface>
             <name>IComposer</name>
@@ -95,6 +82,15 @@
         <version>2.0</version>
         <interface>
             <name>IMapper</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
+        <name>android.hardware.keymaster</name>
+        <transport>hwbinder</transport>
+        <version>3.0</version>
+        <interface>
+            <name>IKeymasterDevice</name>
             <instance>default</instance>
         </interface>
     </hal>
@@ -188,28 +184,20 @@
         </interface>
     </hal>
     <hal format="hidl">
+        <name>android.hardware.thermal</name>
+        <transport>hwbinder</transport>
+        <version>1.0</version>
+        <interface>
+            <name>IThermal</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
         <name>android.hardware.vibrator</name>
         <transport>hwbinder</transport>
         <version>1.0</version>
         <interface>
             <name>IVibrator</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="hidl">
-        <name>vendor.lineage.livedisplay</name>
-        <transport>hwbinder</transport>
-        <version>2.0</version>
-        <interface>
-            <name>IAdaptiveBacklight</name>
-            <instance>default</instance>
-        </interface>
-        <interface>
-            <name>IAutoContrast</name>
-            <instance>default</instance>
-        </interface>
-        <interface>
-            <name>IDisplayColorCalibration</name>
             <instance>default</instance>
         </interface>
     </hal>

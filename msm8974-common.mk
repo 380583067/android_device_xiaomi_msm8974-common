@@ -61,10 +61,8 @@ PRODUCT_COPY_FILES += \
 
 # Audio
 PRODUCT_PACKAGES += \
-    android.hardware.audio.service \
-    android.hardware.audio@7.0-impl \
-    android.hardware.audio.effect@7.0-impl \
-    android.hardware.broadcastradio@1.0-impl \
+    android.hardware.audio@6.0-impl \
+    android.hardware.audio.effect@6.0-impl \
     android.hardware.soundtrigger@2.0-impl \
     audiod \
     audio.a2dp.default \
@@ -139,7 +137,8 @@ PRODUCT_PACKAGES += \
 
 # GPS
 PRODUCT_PACKAGES += \
-    android.hardware.gnss@1.0-impl \
+    android.hardware.gnss@1.0-impl.legacy \
+    android.hardware.gnss@1.0-service.legacy \
     gps.msm8974
  
 PRODUCT_COPY_FILES += \
@@ -167,7 +166,6 @@ PRODUCT_PACKAGES += \
 # Health
 PRODUCT_PACKAGES += \
     android.hardware.health@2.1-impl \
-    android.hardware.health@2.1-impl.recovery \
     android.hardware.health@2.1-service
 
 # HIDL
@@ -186,14 +184,18 @@ PRODUCT_COPY_FILES += \
 
 # Keymaster
 PRODUCT_PACKAGES += \
-    android.hardware.keymaster@4.1-service
+    android.hardware.keymaster@3.0-impl \
+    android.hardware.keymaster@3.0-service
 
 PRODUCT_COPY_FILES += \
-    prebuilts/vndk/v29/arm/arch-arm-armv7-a-neon/shared/vndk-core/libprotobuf-cpp-lite.so:$(TARGET_COPY_OUT_VENDOR)/lib/libprotobuf-cpp-lite-v29.so
+    prebuilts/vndk/v29/arm/arch-arm-armv7-a-neon/shared/vndk-core/libprotobuf-cpp-lite.so:$(TARGET_COPY_OUT_VENDOR)/lib/libprotobuf-cpp-lite.so \
+    prebuilts/vndk/v29/arm/arch-arm-armv7-a-neon/shared/vndk-core/libprotobuf-cpp-full.so:$(TARGET_COPY_OUT_VENDOR)/lib/libprotobuf-cpp-full.so
 
 # Lights
 PRODUCT_PACKAGES += \
-    android.hardware.light@2.0-service.xiaomi_msm8974
+    android.hardware.light@2.0-impl \
+    android.hardware.light@2.0-service \
+    lights.msm8974
 
 # LiveDisplay
 PRODUCT_PACKAGES += \
@@ -236,7 +238,8 @@ PRODUCT_SYSTEM_EXT_PROPERTIES += \
 
 # Power
 PRODUCT_PACKAGES += \
-    android.hardware.power-service-qti
+    android.hardware.power-service-qti \
+    android.hardware.power.stats@1.0-service.mock
 
 # Privapp Whitelist
 PRODUCT_COPY_FILES += \
@@ -308,6 +311,10 @@ PRODUCT_PACKAGES -= \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/thermal-engine-perf.conf:system/vendor/etc/thermal-engine-perf.conf
 
+PRODUCT_PACKAGES += \
+    android.hardware.thermal@1.0-impl \
+    android.hardware.thermal@1.0-service
+
 # TimeKeep
 PRODUCT_PACKAGES += \
     timekeep \
@@ -333,7 +340,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_wlan_nv_x5.bin:system/vendor/firmware/wlan/prima/WCNSS_qcom_wlan_nv_x5.bin
 
 PRODUCT_PACKAGES += \
-    android.hardware.wifi@1.0-service \
+    android.hardware.wifi@1.0-service.legacy \
     hostapd \
     libwpa_client \
     wificond \

@@ -1,27 +1,19 @@
-# Art
+# ART
 PRODUCT_PROPERTY_OVERRIDES += \
-    dalvik.vm.boot-dex2oat-threads=4 \
-    dalvik.vm.boot-dex2oat-cpu-set=0,1,2,3 \
-    dalvik.vm.dex2oat64.enabled=false \
     dalvik.vm.dex2oat-cpu-set=0,1,2,3 \
+    dalvik.vm.dex2oat-threads=4 \
     dalvik.vm.dex2oat-filter=speed \
-    dalvik.vm.dex2oat-swap=false \
-    dalvik.vm.image-dex2oat-cpu-set=0,1,2,3 \
-    dalvik.vm.image-dex2oat-threads=4 \
-    ro.sys.fw.dex2oat_thread_count=4
+    dalvik.vm.dex2oat-swap=false
 
-# Dalvik heap
-PRODUCT_PROPERTY_OVERRIDES += \
-    dalvik.vm.heapstartsize=16m \
-    dalvik.vm.heapgrowthlimit=192m \
-    dalvik.vm.heapsize=512m \
-    dalvik.vm.heaptargetutilization=0.75 \
-    dalvik.vm.heapminfree=2m \
-    dalvik.vm.heapmaxfree=8m
+# JIT
+PRODUCT_SYSTEM_PROPERTIES += \
+    dalvik.vm.usejit=false \
+    dalvik.vm.usejitprofiles=false \
+    dalvik.vm.use_memfd=false
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.extension_library=libqti-perfd-client.so \
-    rild.libpath=/vendor/lib/libril-qc-qmi-1.so \
+    vendor.rild.libpath=/vendor/lib/libril-qc-qmi-1.so \
     ril.subscription.types=NV,RUIM \
     persist.radio.apm_sim_not_pwdn=0 \
     mmp.enable.3g2=true \
@@ -105,7 +97,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.radio.sglte.eons_domain=ps \
     ro.qualcomm.perf.cores_online=1 \
-    dalvik.vm.dex2oat-swap=false \
     ro.gps.agps_provider=1 \
     persist.debug.wfd.enable=1 \
     persist.demo.hdmirotationlock=false \
@@ -149,12 +140,12 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.binary_xml=false \
     ro.vndk.version=current \
     ro.soc.manufacturer=Qualcomm \
-    ro.soc.model=MSM8974
+    ro.soc.model=MSM8974 \
+	ro.urandom.bypass_entropy_check=true
 
 # EGL
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.hardware.egl=adreno \
-    ro.hardware=msm8974
+    ro.hardware.egl=adreno
 
 # SafetyNet
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -162,3 +153,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.snet.enable=false \
     ro.oem_unlock_supported=1
 
+# off crash_dump is SELinux
+PRODUCT_PROPERTY_OVERRIDES += \
+	persist.log.tag.crash_dump32=S \
+	persist.log.tag.auditd=S
