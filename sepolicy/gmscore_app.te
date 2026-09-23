@@ -1,2 +1,2 @@
 allow gmscore_app vendor_default_prop:file { open getattr map };
-allow gmscore_app adbd_prop:file { open getattr map };
+allow gmscore_app default_prop:file { open getattr map };
