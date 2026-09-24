@@ -62,7 +62,9 @@ PRODUCT_COPY_FILES += \
 # Audio
 PRODUCT_PACKAGES += \
     android.hardware.audio@6.0-impl \
+    android.hardware.audio@2.0-service \
     android.hardware.audio.effect@6.0-impl \
+    android.hardware.broadcastradio@1.0-impl \
     android.hardware.soundtrigger@2.0-impl \
     audiod \
     audio.a2dp.default \
@@ -101,8 +103,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
     camera.device@1.0-impl \
+    camera.msm8974 \
     libxml2 \
-    Snap
+    OpenCamera
 
 # Charger
 PRODUCT_PACKAGES += \
@@ -137,8 +140,7 @@ PRODUCT_PACKAGES += \
 
 # GPS
 PRODUCT_PACKAGES += \
-    android.hardware.gnss@1.0-impl.legacy \
-    android.hardware.gnss@1.0-service.legacy \
+    android.hardware.gnss@1.0-impl \
     gps.msm8974
  
 PRODUCT_COPY_FILES += \
@@ -193,9 +195,7 @@ PRODUCT_COPY_FILES += \
 
 # Lights
 PRODUCT_PACKAGES += \
-    android.hardware.light@2.0-impl \
-    android.hardware.light@2.0-service \
-    lights.msm8974
+    android.hardware.light@2.0-service.xiaomi_msm8974
 
 # LiveDisplay
 PRODUCT_PACKAGES += \
@@ -229,12 +229,6 @@ PRODUCT_PACKAGES += \
     ethertypes \
     libnl_2 \
     libbson
-
-# NET
-BOARD_IPT_NFT_NO_BPF := true
-PRODUCT_SYSTEM_EXT_PROPERTIES += \
-    net.enable_bpf=false \
-    net.tethering.non_blocking=false
 
 # Power
 PRODUCT_PACKAGES += \
@@ -293,7 +287,8 @@ PRODUCT_PACKAGES += \
 
 # Shims
 PRODUCT_PACKAGES += \
-    libshims_thermal
+    libshims_thermal \
+    libshim_zw
 
 # SoftAP
 PRODUCT_PACKAGES += \
@@ -310,10 +305,6 @@ PRODUCT_PACKAGES -= \
 # Thermal config
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/thermal-engine-perf.conf:system/vendor/etc/thermal-engine-perf.conf
-
-PRODUCT_PACKAGES += \
-    android.hardware.thermal@1.0-impl \
-    android.hardware.thermal@1.0-service
 
 # TimeKeep
 PRODUCT_PACKAGES += \
@@ -340,7 +331,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_wlan_nv_x5.bin:system/vendor/firmware/wlan/prima/WCNSS_qcom_wlan_nv_x5.bin
 
 PRODUCT_PACKAGES += \
-    android.hardware.wifi@1.0-service.legacy \
+    android.hardware.wifi@1.0-service \
     hostapd \
     libwpa_client \
     wificond \
@@ -348,8 +339,3 @@ PRODUCT_PACKAGES += \
     wpa_supplicant.conf \
     wpa_supplicant_overlay.conf \
     p2p_supplicant_overlay.conf
-    
-# cgroup
-PRODUCT_COPY_FILES += \
-    system/core/libprocessgroup/profiles/cgroups_28.json:$(TARGET_COPY_OUT_VENDOR)/etc/cgroups.json \
-    system/core/libprocessgroup/profiles/task_profiles_28.json:$(TARGET_COPY_OUT_VENDOR)/etc/task_profiles.json

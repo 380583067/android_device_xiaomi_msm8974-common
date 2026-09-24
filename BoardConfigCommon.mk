@@ -78,25 +78,20 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(PLATFORM_PATH)/bluetooth
 QCOM_BT_USE_SMD_TTY                         := true
 BLUETOOTH_HCI_USE_MCT                       := true
 
+# Camera
+TARGET_NEEDS_LEGACY_CAMERA_HAL1_DYN_NATIVE_HANDLE := true
+TARGET_USES_MEDIA_EXTENSIONS           := true
+TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
+USE_DEVICE_SPECIFIC_CAMERA             := true
+TARGET_PROCESS_SDK_VERSION_OVERRIDE := \
+    /system/vendor/bin/mm-qcamera-daemon=23
+
 # Charger
 BOARD_CHARGER_ENABLE_SUSPEND := true
 
 # Crypto
 TARGET_HW_DISK_ENCRYPTION := true
 TARGET_LEGACY_HW_DISK_ENCRYPTION := true
-
-# Dexpreopt
-ifeq ($(HOST_OS),linux)
-  ifneq ($(TARGET_BUILD_VARIANT),eng)
-    WITH_DEXPREOPT := true
-    WITH_DEXPREOPT_DEBUG_INFO := false
-    USE_DEX2OAT_DEBUG := false
-    WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := false
-    PRODUCT_DEX_PREOPT_BOOT_COMPILER_FILTER := speed
-    PRODUCT_USE_COMPACT_DEX := true
-    WITH_DEX_PREOPT_GENERATE_APP_IMAGE := true
-  endif
-endif
 
 # Extended filesystem support
 TARGET_EXFAT_DRIVER := sdfat
@@ -132,16 +127,16 @@ DEVICE_MANIFEST_FILE := $(PLATFORM_PATH)/manifest.xml
 DEVICE_MATRIX_FILE := $(PLATFORM_PATH)/compatibility_matrix.xml
 
 # Kernel
-BOARD_KERNEL_CMDLINE               := random.trust_cpu=on vmalloc=340M androidboot.hardware=qcom msm_rtb.filter=0x3b7 ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1 androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE               := vmalloc=340M androidboot.hardware=qcom msm_rtb.filter=0x3b7 ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1 androidboot.selinux=permissive
 LZMA_RAMDISK_TARGETS               := boot,recovery
 BOARD_KERNEL_SEPARATED_DT          := true
 BOARD_KERNEL_BASE                  := 0x00000000
 BOARD_KERNEL_PAGESIZE              := 2048
 BOARD_KERNEL_IMAGE_NAME            := zImage
 BOARD_MKBOOTIMG_ARGS               := --ramdisk_offset 0x02000000 --tags_offset 0x01E00000
-TARGET_KERNEL_SOURCE               := kernel/xiaomi/cancro
+TARGET_KERNEL_SOURCE               := kernel/xiaomi/virgo
 TARGET_KERNEL_ARCH                 := arm
-TARGET_KERNEL_CONFIG               := cancro_defconfig
+TARGET_KERNEL_CONFIG               := virgo_defconfig
 BOARD_DTBTOOL_ARGS                 := -2
 TARGET_KERNEL_CLANG_COMPILE        := false
 TARGET_KERNEL_ADDITIONAL_FLAGS := HOSTCFLAGS="-fuse-ld=lld -Wno-unused-command-line-argument"
@@ -192,7 +187,7 @@ include device/qcom/sepolicy-legacy/sepolicy.mk
 BOARD_SEPOLICY_DIRS += $(PLATFORM_PATH)/sepolicy
 SELINUX_IGNORE_NEVERALLOWS := true
 
-# Shim
+# Shims
 TARGET_LD_SHIM_LIBS := \
     /system/vendor/lib/libril-qc-qmi-1.so|libaudioclient_shim.so \
     /system/vendor/lib/libmm-abl.so|libshims_thermal.so
@@ -221,7 +216,10 @@ WIFI_DRIVER_FW_PATH_STA          := "sta"
 WIFI_DRIVER_FW_PATH_AP           := "ap"
 WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
 TARGET_PROVIDES_WCNSS_QMI        := true
-TARGET_USES_QCOM_WCNSS_QMI       := false
+TARGET_USES_QCOM_WCNSS_QMI       := true
 TARGET_USES_WCNSS_CTRL           := true
+
+# Dexpreopt
+WITH_DEXPREOPT_DEBUG_INFO := false
 
 -include vendor/xiaomi/msm8974-common/BoardConfigVendor.mk

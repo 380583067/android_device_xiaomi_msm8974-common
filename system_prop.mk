@@ -5,11 +5,14 @@ PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-filter=speed \
     dalvik.vm.dex2oat-swap=false
 
-# JIT
-PRODUCT_SYSTEM_PROPERTIES += \
-    dalvik.vm.usejit=false \
-    dalvik.vm.usejitprofiles=false \
-    dalvik.vm.use_memfd=false
+# Dalvik heap
+PRODUCT_PROPERTY_OVERRIDES += \
+    dalvik.vm.heapstartsize=16m \
+    dalvik.vm.heapgrowthlimit=192m \
+    dalvik.vm.heapsize=512m \
+    dalvik.vm.heaptargetutilization=0.75 \
+    dalvik.vm.heapminfree=2m \
+    dalvik.vm.heapmaxfree=8m
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.extension_library=libqti-perfd-client.so \
@@ -113,7 +116,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.hwui.use_buffer_age=false
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    vendor.bluetooth.soc=smd \
     vendor.qcom.bluetooth.soc=smd \
     ro.bluetooth.hfp.ver=1.7 \
     ro.qualcomm.bt.hci_transport=smd \
@@ -140,20 +142,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.binary_xml=false \
     ro.vndk.version=current \
     ro.soc.manufacturer=Qualcomm \
-    ro.soc.model=MSM8974 \
-	ro.urandom.bypass_entropy_check=true
+    ro.soc.model=MSM8974
 
 # EGL
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.hardware.egl=adreno
-
-# SafetyNet
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.config.net.snet=false \
-    persist.sys.snet.enable=false \
-    ro.oem_unlock_supported=1
-
-# off crash_dump is SELinux
-PRODUCT_PROPERTY_OVERRIDES += \
-	persist.log.tag.crash_dump32=S \
-	persist.log.tag.auditd=S
