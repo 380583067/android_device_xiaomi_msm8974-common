@@ -3131,7 +3131,7 @@ int QCamera2HardwareInterface::takePicture()
                 QCameraPicChannel *pCapChannel =
                     (QCameraPicChannel *)m_channels[QCAMERA_CH_TYPE_CAPTURE];
                 if (NULL != pCapChannel) {
-                    if (mParameters.isUbiFocusEnabled()|
+                    if (mParameters.isUbiFocusEnabled()||
                         mParameters.isChromaFlashEnabled()) {
                         rc = startAdvancedCapture(pCapChannel);
                         if (rc != NO_ERROR) {
@@ -6573,11 +6573,11 @@ bool QCamera2HardwareInterface::needReprocess()
         return true;
     }
 
-    if (mParameters.isUbiFocusEnabled() |
-        mParameters.isMultiTouchFocusEnabled() |
-        mParameters.isChromaFlashEnabled() |
-        mParameters.isHDREnabled() |
-        mParameters.isfssrEnabled() |
+    if (mParameters.isUbiFocusEnabled() ||
+        mParameters.isMultiTouchFocusEnabled() ||
+        mParameters.isChromaFlashEnabled() ||
+        mParameters.isHDREnabled() ||
+        mParameters.isfssrEnabled() ||
         mParameters.isOptiZoomEnabled()) {
         CDBG_HIGH("%s: need reprocess for |UbiFocus=%d|ChramaFlash=%d"
                   "|OptiZoom=%d|fssr=%d|MultiTouchFocus=%d",__func__,
