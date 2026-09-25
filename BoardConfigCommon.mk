@@ -74,7 +74,6 @@ TARGET_USES_64_BIT_BINDER := true
 # Bluetooth
 BOARD_HAVE_BLUETOOTH                        := true
 BOARD_HAVE_BLUETOOTH_QCOM                   := true
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(PLATFORM_PATH)/bluetooth
 QCOM_BT_USE_SMD_TTY                         := true
 BLUETOOTH_HCI_USE_MCT                       := true
 
@@ -165,6 +164,10 @@ BOARD_ROOT_EXTRA_FOLDERS           := firmware persist
 TARGET_USES_INTERACTION_BOOST := true
 TARGET_POWERHAL_SET_INTERACTIVE_EXT := $(PLATFORM_PATH)/power/power_ext.c
 
+# Properties
+TARGET_SYSTEM_PROP += $(PLATFORM_PATH)/system.prop
+TARGET_PRODUCT_PROP += $(PLATFORM_PATH)/product.prop
+
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE            := true
 
@@ -220,6 +223,13 @@ TARGET_USES_QCOM_WCNSS_QMI       := true
 TARGET_USES_WCNSS_CTRL           := true
 
 # Dexpreopt
-WITH_DEXPREOPT_DEBUG_INFO := false
+ifeq ($(HOST_OS),linux)
+  ifneq ($(TARGET_BUILD_VARIANT),eng)
+      WITH_DEXPREOPT ?= true
+      WITH_DEXPREOPT_DEBUG_INFO := false
+      USE_DEX2OAT_DEBUG := false
+  endif
+endif
+WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := false
 
 -include vendor/xiaomi/msm8974-common/BoardConfigVendor.mk

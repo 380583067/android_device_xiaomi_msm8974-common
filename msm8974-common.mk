@@ -3,9 +3,6 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 # call the proprietary setup
 $(call inherit-product, vendor/xiaomi/msm8974-common/msm8974-common-vendor.mk)
 
-# System properties
--include $(LOCAL_PATH)/system_prop.mk
-
 # Boot animation
 TARGET_SCREEN_HEIGHT := 1920
 TARGET_SCREEN_WIDTH := 1080
@@ -52,7 +49,6 @@ PRODUCT_COPY_FILES += \
 # ANT+
 PRODUCT_PACKAGES += \
     AntHalService \
-    com.dsi.ant.antradio_library \
     libantradio
 
 # APEX
@@ -66,9 +62,6 @@ PRODUCT_PACKAGES += \
     android.hardware.audio.effect@6.0-impl \
     android.hardware.broadcastradio@1.0-impl \
     android.hardware.soundtrigger@2.0-impl \
-    audiod \
-    audio.a2dp.default \
-    audio_policy.msm8974 \
     audio.primary.msm8974 \
     audio.r_submix.default \
     audio.usb.default \
@@ -84,7 +77,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/listen_platform_info.xml:system/vendor/etc/listen_platform_info.xml
 
 PRODUCT_COPY_FILES += \
-    frameworks/av/services/audiopolicy/config/a2dp_audio_policy_configuration.xml:system/vendor/etc/a2dp_audio_policy_configuration.xml \
+    frameworks/av/services/audiopolicy/config/bluetooth_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/bluetooth_audio_policy_configuration.xml \
     frameworks/av/services/audiopolicy/config/audio_policy_volumes.xml:system/vendor/etc/audio_policy_volumes.xml \
     frameworks/av/services/audiopolicy/config/default_volume_tables.xml:system/vendor/etc/default_volume_tables.xml \
     frameworks/av/services/audiopolicy/config/r_submix_audio_policy_configuration.xml:system/vendor/etc/r_submix_audio_policy_configuration.xml \
@@ -95,25 +88,22 @@ PRODUCT_PACKAGES += librecovery_updater_xiaomi
 
 # Bluetooth
 PRODUCT_PACKAGES += \
-    android.hardware.bluetooth@1.0-impl \
     bdaddr_xiaomi \
-    libbt-vendor
+    libbt-vendor \
+    android.hardware.bluetooth@1.0-impl \
+    audio.bluetooth.default \
+    android.hardware.bluetooth.audio@2.1-impl
 
 # Camera
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
     camera.device@1.0-impl \
     camera.msm8974 \
-    libxml2 \
-    OpenCamera
+    libxml2
 
 # Charger
 PRODUCT_PACKAGES += \
     chargeonlymode
-
-# CryptfsHW
-PRODUCT_PACKAGES += \
-    vendor.qti.hardware.cryptfshw@1.0-service-qti.qsee
 
 # Display Device Config
 PRODUCT_COPY_FILES += \
@@ -125,13 +115,8 @@ PRODUCT_PACKAGES += \
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
-    make_ext4fs \
-    setup_fs \
-    mkntfs \
-    dumpe2fs \
     resize2fs \
     e2fsck_static \
-    mke2fs_static \
     resize2fs_static
 
 # Gatekeeper
@@ -162,12 +147,12 @@ PRODUCT_PACKAGES += \
     gralloc.msm8974 \
     hwcomposer.msm8974 \
     memtrack.msm8974 \
-    liboverlay \
-    libgenlock
+    liboverlay
 
 # Health
 PRODUCT_PACKAGES += \
     android.hardware.health@2.1-impl \
+    android.hardware.health@2.1-impl.recovery \
     android.hardware.health@2.1-service
 
 # HIDL
@@ -186,8 +171,7 @@ PRODUCT_COPY_FILES += \
 
 # Keymaster
 PRODUCT_PACKAGES += \
-    android.hardware.keymaster@3.0-impl \
-    android.hardware.keymaster@3.0-service
+    android.hardware.keymaster@4.1-service
 
 PRODUCT_COPY_FILES += \
     prebuilts/vndk/v29/arm/arch-arm-armv7-a-neon/shared/vndk-core/libprotobuf-cpp-lite.so:$(TARGET_COPY_OUT_VENDOR)/lib/libprotobuf-cpp-lite.so \
@@ -213,6 +197,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.0-impl \
     android.hardware.drm@1.0-service \
+    android.hardware.drm-service.clearkey \
     libc2dcolorconvert \
     libOmxAacEnc \
     libOmxAmrEnc \
@@ -223,14 +208,13 @@ PRODUCT_PACKAGES += \
     libOmxVenc \
     libstagefrighthw
 
-# Misc dependency packages
-PRODUCT_PACKAGES += \
-    ebtables \
-    ethertypes \
-    libnl_2 \
-    libbson
+# NET
+BOARD_IPT_NFT_NO_BPF := true
+PRODUCT_SYSTEM_EXT_PROPERTIES += \
+    net.enable_bpf=false \
+    net.tethering.non_blocking=false
 
-# Power
+# Power HAL
 PRODUCT_PACKAGES += \
     android.hardware.power-service-qti \
     android.hardware.power.stats@1.0-service.mock
@@ -292,8 +276,6 @@ PRODUCT_PACKAGES += \
 
 # SoftAP
 PRODUCT_PACKAGES += \
-    libqsap_sdk \
-    libQWiFiSoftApCfg \
     libwcnss_qmi \
     wcnss_service
 
@@ -302,7 +284,12 @@ PRODUCT_PACKAGES -= \
     SafetyNetPrebuilt \
     snet_event_log
 
-# Thermal config
+# Thermal
+PRODUCT_PACKAGES += \
+    android.hardware.thermal@1.0-impl \
+    android.hardware.thermal@1.0-service \
+    thermal.default
+
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/thermal-engine-perf.conf:system/vendor/etc/thermal-engine-perf.conf
 
@@ -323,6 +310,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.vibrator@1.0-impl \
     android.hardware.vibrator@1.0-service
+
+# VNDK
+PRODUCT_COPY_FILES += \
+    prebuilts/vndk/v29/arm/arch-arm-armv7-a-neon/shared/vndk-core/libprotobuf-cpp-lite.so:$(TARGET_COPY_OUT_VENDOR)/lib/libprotobuf-cpp-lite-v29.so
 
 # WiFi
 PRODUCT_COPY_FILES += \
