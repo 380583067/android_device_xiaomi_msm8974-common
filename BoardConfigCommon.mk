@@ -18,6 +18,9 @@ BOARD_VENDOR := xiaomi
 
 PLATFORM_PATH := device/xiaomi/msm8974-common
 
+# Apex
+OVERRIDE_TARGET_FLATTEN_APEX := true
+
 # ReleaseTools
 TARGET_RECOVERY_UPDATER_LIBS := librecovery_updater_xiaomi
 TARGET_BOARD_INFO_FILE := $(PLATFORM_PATH)/board-info.txt
@@ -121,9 +124,13 @@ TARGET_DISABLE_POSTRENDER_CLEANUP := true
 MAX_EGL_CACHE_KEY_SIZE := 12*1024
 MAX_EGL_CACHE_SIZE := 2048*1024
 
-# HIDL
+# HIDL Manifest
+PRODUCT_ENFORCE_VINTF_MANIFEST_OVERRIDE := true
 DEVICE_MANIFEST_FILE := $(PLATFORM_PATH)/manifest.xml
 DEVICE_MATRIX_FILE := $(PLATFORM_PATH)/compatibility_matrix.xml
+DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
+    $(PLATFORM_PATH)/framework_compatibility_matrix.xml \
+    vendor/lineage/config/device_framework_matrix.xml
 
 # Kernel
 BOARD_KERNEL_CMDLINE               := vmalloc=340M androidboot.hardware=qcom msm_rtb.filter=0x3b7 ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1 androidboot.selinux=permissive
@@ -167,6 +174,7 @@ TARGET_POWERHAL_SET_INTERACTIVE_EXT := $(PLATFORM_PATH)/power/power_ext.c
 # Properties
 TARGET_SYSTEM_PROP += $(PLATFORM_PATH)/system.prop
 TARGET_PRODUCT_PROP += $(PLATFORM_PATH)/product.prop
+TARGET_VENDOR_PROP += $(PLATFORM_PATH)/vendor.prop
 
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE            := true
@@ -202,9 +210,6 @@ BOARD_USES_QC_TIME_SERVICES := true
 ifeq ($(WITH_TWRP),true)
 -include $(PLATFORM_PATH)/twrp/twrp.mk
 endif
-
-# Vintf
-PRODUCT_ENFORCE_VINTF_MANIFEST_OVERRIDE := true
 
 # Wifi
 BOARD_HAS_QCOM_WLAN              := true

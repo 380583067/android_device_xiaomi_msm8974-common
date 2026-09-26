@@ -62,6 +62,7 @@ PRODUCT_PACKAGES += \
     android.hardware.audio.effect@6.0-impl \
     android.hardware.broadcastradio@1.0-impl \
     android.hardware.soundtrigger@2.0-impl \
+    audio.primary.default \
     audio.primary.msm8974 \
     audio.r_submix.default \
     audio.usb.default \
@@ -69,6 +70,7 @@ PRODUCT_PACKAGES += \
     libqcompostprocbundle \
     libqcomvisualizer \
     libqcomvoiceprocessing \
+    libaudioroute \
     tinymix
 
 PRODUCT_COPY_FILES += \
@@ -92,7 +94,8 @@ PRODUCT_PACKAGES += \
     libbt-vendor \
     android.hardware.bluetooth@1.0-impl \
     audio.bluetooth.default \
-    android.hardware.bluetooth.audio@2.1-impl
+    android.hardware.bluetooth.audio@2.1-impl \
+    android.hardware.bluetooth.audio-impl
 
 # Camera
 PRODUCT_PACKAGES += \
@@ -125,7 +128,8 @@ PRODUCT_PACKAGES += \
 
 # GPS
 PRODUCT_PACKAGES += \
-    android.hardware.gnss@1.0-impl \
+    android.hardware.gnss@1.0-impl.legacy \
+    android.hardware.gnss@1.0-service.legacy \
     gps.msm8974
  
 PRODUCT_COPY_FILES += \
@@ -140,7 +144,7 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.allocator@2.0-impl \
     android.hardware.graphics.allocator@2.0-service \
     android.hardware.graphics.composer@2.1-service \
-    android.hardware.graphics.mapper@2.0-impl \
+    android.hardware.graphics.mapper@2.0-impl-2.1 \
     android.hardware.memtrack@1.0-impl \
     android.hardware.memtrack@1.0-service \
     copybit.msm8974 \
@@ -206,13 +210,17 @@ PRODUCT_PACKAGES += \
     libOmxQcelp13Enc \
     libOmxVdec \
     libOmxVenc \
-    libstagefrighthw
+    libstagefrighthw \
+    libminijail:32
 
 # NET
 BOARD_IPT_NFT_NO_BPF := true
 PRODUCT_SYSTEM_EXT_PROPERTIES += \
     net.enable_bpf=false \
     net.tethering.non_blocking=false
+
+# Partitions
+$(call inherit-product, $(SRC_TARGET_DIR)/product/non_ab_device.mk)
 
 # Power HAL
 PRODUCT_PACKAGES += \
@@ -298,13 +306,13 @@ PRODUCT_PACKAGES += \
     timekeep \
     TimeKeep
 
-# Trust HAL
-PRODUCT_PACKAGES += \
-    vendor.lineage.trust@1.0-service
-
 # USB HAL
 PRODUCT_PACKAGES += \
-    android.hardware.usb@1.0-service.basic
+    android.hardware.usb@1.3-service.basic
+
+# Use legacy ADB USB support
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.adb.nonblocking_ffs=false
 
 # Vibrator
 PRODUCT_PACKAGES += \
@@ -312,6 +320,10 @@ PRODUCT_PACKAGES += \
     android.hardware.vibrator@1.0-service
 
 # VNDK
+PRODUCT_TARGET_VNDK_VERSION := 34
+VNDK_SP_LIBRARIES := \
+    com.android.vndk.current
+
 PRODUCT_COPY_FILES += \
     prebuilts/vndk/v29/arm/arch-arm-armv7-a-neon/shared/vndk-core/libprotobuf-cpp-lite.so:$(TARGET_COPY_OUT_VENDOR)/lib/libprotobuf-cpp-lite-v29.so
 
@@ -330,3 +342,9 @@ PRODUCT_PACKAGES += \
     wpa_supplicant.conf \
     wpa_supplicant_overlay.conf \
     p2p_supplicant_overlay.conf
+
+# webview uses-library
+PRODUCT_USES_LIBRARIES += androidx.window.extensions
+PRODUCT_OPTIONAL_USES_LIBRARIES += androidx.window.extensions
+PRODUCT_PACKAGES += androidx.window.extensions
+PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true

@@ -1,4 +1,4 @@
-<manifest version="1.0" type="device" target-level="5">
+<compatibility-matrix version="2.0" type="framework">
     <hal format="hidl">
         <name>android.hardware.audio</name>
         <transport>hwbinder</transport>
@@ -52,7 +52,16 @@
             <name>ICameraProvider</name>
             <instance>legacy/0</instance>
         </interface>
-    </hal>
+     </hal>
+    <hal format="hidl">
+        <name>android.hardware.camera</name>
+        <transport arch="32">passthrough</transport>
+        <version>1.0</version>
+        <interface>
+            <name>ICamera</name>
+            <instance>default</instance>
+        </interface>
+     </hal>
     <hal format="hidl">
         <name>android.frameworks.cameraservice.service</name>
         <transport>hwbinder</transport>
@@ -81,6 +90,15 @@
         </interface>
         <interface>
             <name>IDrmFactory</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
+        <name>android.hardware.gatekeeper</name>
+        <transport>hwbinder</transport>
+        <version>1.0</version>
+        <interface>
+            <name>IGatekeeper</name>
             <instance>default</instance>
         </interface>
     </hal>
@@ -121,6 +139,24 @@
         </interface>
     </hal>
     <hal format="hidl">
+        <name>android.hardware.health</name>
+        <transport>hwbinder</transport>
+        <version>2.1</version>
+        <interface>
+            <name>IHealth</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
+        <name>android.hardware.keymaster</name>
+        <transport>hwbinder</transport>
+        <version>4.1</version>
+        <interface>
+            <name>IKeymasterDevice</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
         <name>android.hardware.light</name>
         <transport>hwbinder</transport>
         <version>2.0</version>
@@ -148,6 +184,15 @@
         <version>1.0</version>
         <interface>
             <name>IMemtrack</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
+        <name>android.hardware.power</name>
+        <transport>hwbinder</transport>
+        <version>1.0</version>
+        <interface>
+            <name>IPower</name>
             <instance>default</instance>
         </interface>
     </hal>
@@ -219,11 +264,29 @@
         </interface>
     </hal>
     <hal format="hidl">
+        <name>android.hardware.usb</name>
+        <transport>hwbinder</transport>
+        <version>1.3</version>
+        <interface>
+            <name>IUsb</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
         <name>android.hardware.vibrator</name>
         <transport>hwbinder</transport>
         <version>1.0</version>
         <interface>
             <name>IVibrator</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
+        <name>android.hardware.wifi</name>
+        <transport>hwbinder</transport>
+        <version>1.6</version>
+        <interface>
+            <name>IWifi</name>
             <instance>default</instance>
         </interface>
     </hal>
@@ -244,4 +307,4 @@
             <instance>default</instance>
         </interface>
     </hal>
-</manifest>
+</compatibility-matrix>

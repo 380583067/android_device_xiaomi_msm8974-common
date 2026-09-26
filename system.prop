@@ -1,11 +1,12 @@
-# ART
-dalvik.vm.dex2oat-cpu-set=0,1,2,3
-dalvik.vm.dex2oat-threads=4
-dalvik.vm.dex2oat-filter=verify
-dalvik.vm.dex2oat-swap=false
+# LMKD
+ro.lmk.kill_heaviest_task=true
+ro.lmk.use_psi=true
+ro.lmk.use_minfree_levels=false
+ro.lmk.thrashing_limit_decay=50
+ro.lmk.downgrade_pressure=30
 
-ro.lmk.use_minfree_levels=true
-ro.lmk.kill_heaviest_task=false
+# Filesystem
+fs_mgr.overlayfs.prefer_cache_backing_storage=true
 
 # Bluetooth
 persist.log.tag.OpenGLRenderer=S
@@ -18,13 +19,17 @@ debug.sf.enable_transaction_tracing=false
 bluetooth.device.default_name=Xiaomi MI4
 vendor.usb.product_string=Xiaomi MI4
 
-# Dalvik heap
+# Dalvik
 dalvik.vm.heapstartsize=16m
 dalvik.vm.heapgrowthlimit=192m
 dalvik.vm.heapsize=512m
 dalvik.vm.heaptargetutilization=0.75
 dalvik.vm.heapminfree=2m
 dalvik.vm.heapmaxfree=8m
+dalvik.vm.dex2oat-swap=false
+dalvik.vm.dex2oat-cpu-set=0,1,2,3
+dalvik.vm.dex2oat-threads=4
+dalvik.vm.dex2oat-filter=speed
 
 ro.vendor.extension_library=libqti-perfd-client.so
 vendor.rild.libpath=/vendor/lib/libril-qc-qmi-1.so
@@ -108,7 +113,7 @@ ro.gps.agps_provider=1
 persist.debug.wfd.enable=1
 persist.demo.hdmirotationlock=false
 ro.hdmi.enable=true
-ro.opengles.version=196609
+ro.opengles.version=196608
 persist.hwc.mdpcomp.enable=true
 persist.timed.enable=true
 persist.sys.wfd.virtual=0
@@ -136,12 +141,11 @@ debug.sf.latch_unsignaled=1
 debug.sf.disable_backpressure=1
 debug.sf.enable_gl_backpressure=1
 
-# S Bringup
+# S-U Bringup
 ro.kernel.ebpf.supported=false
-debug.renderengine.backend=threaded
+debug.renderengine.backend=gles
 persist.sys.binary_xml=false
-ro.vndk.version=current
-ro.soc.manufacturer=Qualcomm
+ro.soc.manufacturer=QTI
 ro.soc.model=MSM8974
 ro.urandom.bypass_entropy_check=true
 
@@ -149,6 +153,4 @@ ro.urandom.bypass_entropy_check=true
 ro.hardware.egl=adreno
 
 # Other
-ro.apex.updatable=false
 ro.suspend.enabled=false
-
