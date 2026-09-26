@@ -14,12 +14,30 @@
  * limitations under the License.
  */
 
-#include <media/AudioSystem.h>
+#include <dlfcn.h>
+#include <log/log.h>
 
-extern "C" uintptr_t _ZN7android11AudioSystem16addErrorCallbackEPFviE(
-        android::audio_error_callback cb);
+typedef void (*audio_error_callback)(int);
+typedef void (*addErrorCallback_t)(audio_error_callback);
 
 extern "C" void _ZN7android11AudioSystem16setErrorCallbackEPFviE(
-        android::audio_error_callback cb) {
-    _ZN7android11AudioSystem16addErrorCallbackEPFviE(cb);
+        audio_error_callback cb) {
+    static addErrorCallback_t addErrorCallback = nullptr;
+    if (addErrorCallback == nullptr) {
+        void* handle = dlopen("libaudioclient.so", RTLD_NOW);
+        if (handle == nullptr) {
+            ALOGE("libaudioclient_shim: Failed to dlopen libaudioclient.so: %s", dlerror());
+            return;
+        }
+        addErrorCallback = (addErrorCallback_t)dlsym(handle,
+                "_ZN7android11AudioSystem16addErrorCallbackEPFviE");
+        if (addErrorCallback == nullptr) {
+            ALOGE("libaudioclient_shim: Failed to dlsym addErrorCallback: %s", dlerror());
+            dlclose(handle);
+            return;
+        }
+
+    }
+    addErrorCallback(cb);
 }
+

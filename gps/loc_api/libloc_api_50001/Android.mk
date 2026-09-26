@@ -41,7 +41,8 @@ LOCAL_C_INCLUDES:= \
     $(TARGET_OUT_HEADERS)/gps.utils \
     $(TARGET_OUT_HEADERS)/libloc_core \
     $(LOCAL_PATH) \
-    $(TARGET_OUT_HEADERS)/libflp
+    $(TARGET_OUT_HEADERS)/libflp \
+    hardware/libhardware/include
 
 LOCAL_HEADER_LIBRARIES := libgps.utils_headers libloc_core_headers
 
@@ -59,6 +60,8 @@ LOCAL_MODULE_OWNER := qcom
 LOCAL_PROPRIETARY_MODULE := true
 
 LOCAL_MODULE_TAGS := optional
+
+LOCAL_HEADER_LIBRARIES += libhardware_headers
 
 ## Libs
 LOCAL_SHARED_LIBRARIES := \
@@ -83,7 +86,8 @@ LOCAL_CFLAGS += \
 LOCAL_C_INCLUDES:= \
     $(TARGET_OUT_HEADERS)/gps.utils \
     $(TARGET_OUT_HEADERS)/libloc_core \
-    $(TARGET_OUT_HEADERS)/libflp
+    $(TARGET_OUT_HEADERS)/libflp \
+    hardware/libhardware/include
 
 LOCAL_MODULE_RELATIVE_PATH := hw
 
