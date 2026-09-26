@@ -30,17 +30,20 @@
 #define LOG_TAG "QCamera2HWI"
 #define ATRACE_TAG ATRACE_TAG_CAMERA
 
-#include <utils/Log.h>
+#include <log/log.h>
 #include <cutils/properties.h>
 #include <hardware/camera.h>
 #include <stdlib.h>
 #include <utils/Errors.h>
 #include <utils/Trace.h>
 #include <gralloc_priv.h>
-#include <gui/Surface.h>
 
 #include "QCamera2HWI.h"
 #include "QCameraMem.h"
+
+namespace android {
+    class Surface;
+}
 
 #define MAP_TO_DRIVER_COORDINATE(val, base, scale, offset) \
   ((int32_t)val * (int32_t)scale / (int32_t)base + (int32_t)offset)
@@ -457,7 +460,7 @@ int QCamera2HardwareInterface::start_recording(struct camera_device *device)
             else
                 params.set("preview-format", "nv12-venus");
 
-            hw->set_parameters(device, params.flatten().string());
+            hw->set_parameters(device, params.flatten().c_str());
             // Restart preview to propagate changes to preview window
             hw->stop_preview(device);
             hw->start_preview(device);
@@ -825,7 +828,7 @@ char* QCamera2HardwareInterface::get_parameters(struct camera_device *device)
             // Set exposure-time-values param for CameraNext slow-shutter
             params.set("exposure-time-values", "0");
 
-            ret = strdup(params.flatten().string());
+            ret = strdup(params.flatten().c_str());
         }
     }
     hw->unlockAPI();
@@ -2850,11 +2853,11 @@ int32_t QCamera2HardwareInterface::configureZSLHDRBracketing()
             tmp.append(",");
     }
 
-    if( !tmp.isEmpty() &&
+    if( ( 0 < tmp.length() ) &&
         ( MAX_EXP_BRACKETING_LENGTH > tmp.length() ) ) {
         //Trim last comma
         memset(aeBracket.values, '\0', MAX_EXP_BRACKETING_LENGTH);
-        memcpy(aeBracket.values, tmp.string(), tmp.length() - 1);
+        memcpy(aeBracket.values, tmp.c_str(), tmp.length() - 1);
     }
 
     CDBG_HIGH("%s : HDR config values %s",
@@ -3607,7 +3610,7 @@ char* QCamera2HardwareInterface::getParameters()
     strParams = (char *)malloc(sizeof(char)*(str.length()+1));
     if(strParams != NULL){
         memset(strParams, 0, sizeof(char)*(str.length()+1));
-        strncpy(strParams, str.string(), str.length());
+        strncpy(strParams, str.c_str(), str.length());
         strParams[str.length()] = 0;
     }
 
@@ -6469,7 +6472,6 @@ bool QCamera2HardwareInterface::isPreviewRestartEnabled()
 }
 
 /*===========================================================================
-=======
  * FUNCTION   : isAFRunning
  *
  * DESCRIPTION: if AF is in progress while in Auto/Macro focus modes
@@ -6501,8 +6503,6 @@ bool QCamera2HardwareInterface::needDualReprocess()
 }
 
 /*===========================================================================
-
->>>>>>> c709c9a... Camera: Block CancelAF till HAL receives AF event.
  * FUNCTION   : needReprocess
  *
  * DESCRIPTION: if reprocess is needed
@@ -6760,20 +6760,20 @@ QCameraExif *QCamera2HardwareInterface::getExifData()
     rc = mParameters.getExifDateTime(dateTime,subsecTime);
     if(rc == NO_ERROR) {
         exif->addEntry(EXIFTAGID_EXIF_DATE_TIME_ORIGINAL, EXIF_ASCII,
-                (uint32_t)(dateTime.length() + 1), (void *)dateTime.string());
+                (uint32_t)(dateTime.length() + 1), (void *)dateTime.c_str());
 
 
         exif->addEntry(EXIFTAGID_EXIF_DATE_TIME_DIGITIZED, EXIF_ASCII,
-                (uint32_t)(dateTime.length() + 1), (void *)dateTime.string());
+                (uint32_t)(dateTime.length() + 1), (void *)dateTime.c_str());
 
         exif->addEntry(EXIFTAGID_SUBSEC_TIME, EXIF_ASCII,
-                (uint32_t)(subsecTime.length() + 1), (void *)subsecTime.string());
+                (uint32_t)(subsecTime.length() + 1), (void *)subsecTime.c_str());
 
         exif->addEntry(EXIFTAGID_SUBSEC_TIME_ORIGINAL, EXIF_ASCII,
-                (uint32_t)(subsecTime.length() + 1), (void *)subsecTime.string());
+                (uint32_t)(subsecTime.length() + 1), (void *)subsecTime.c_str());
 
         exif->addEntry(EXIFTAGID_SUBSEC_TIME_DIGITIZED, EXIF_ASCII,
-                (uint32_t)(subsecTime.length() + 1), (void *)subsecTime.string());
+                (uint32_t)(subsecTime.length() + 1), (void *)subsecTime.c_str());
 
     } else {
         ALOGE("%s: getExifDateTime failed", __func__);

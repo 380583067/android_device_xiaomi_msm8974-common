@@ -16,7 +16,7 @@
 
 #define LOG_TAG "bdaddr_xiaomi"
 #define LOG_NDEBUG 0
-
+#include <stdio.h>
 #include <cutils/log.h>
 
 #include <string.h>
