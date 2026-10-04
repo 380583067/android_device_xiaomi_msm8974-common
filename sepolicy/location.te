@@ -1,0 +1,1 @@
+allow location legacy_location_config_file:file r_file_perms;

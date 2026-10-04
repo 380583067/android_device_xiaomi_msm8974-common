@@ -457,7 +457,7 @@ int QCamera2HardwareInterface::start_recording(struct camera_device *device)
             else
                 params.set("preview-format", "nv12-venus");
 
-            hw->set_parameters(device, params.flatten().string());
+            hw->set_parameters(device, params.flatten().c_str());
             // Restart preview to propagate changes to preview window
             hw->stop_preview(device);
             hw->start_preview(device);
@@ -825,7 +825,7 @@ char* QCamera2HardwareInterface::get_parameters(struct camera_device *device)
             // Set exposure-time-values param for CameraNext slow-shutter
             params.set("exposure-time-values", "0");
 
-            ret = strdup(params.flatten().string());
+            ret = strdup(params.flatten().c_str());
         }
     }
     hw->unlockAPI();
@@ -2850,11 +2850,11 @@ int32_t QCamera2HardwareInterface::configureZSLHDRBracketing()
             tmp.append(",");
     }
 
-    if( !tmp.isEmpty() &&
+    if( !tmp.empty() &&
         ( MAX_EXP_BRACKETING_LENGTH > tmp.length() ) ) {
         //Trim last comma
         memset(aeBracket.values, '\0', MAX_EXP_BRACKETING_LENGTH);
-        memcpy(aeBracket.values, tmp.string(), tmp.length() - 1);
+        memcpy(aeBracket.values, tmp.c_str(), tmp.length() - 1);
     }
 
     CDBG_HIGH("%s : HDR config values %s",
@@ -3131,7 +3131,7 @@ int QCamera2HardwareInterface::takePicture()
                 QCameraPicChannel *pCapChannel =
                     (QCameraPicChannel *)m_channels[QCAMERA_CH_TYPE_CAPTURE];
                 if (NULL != pCapChannel) {
-                    if (mParameters.isUbiFocusEnabled()|
+                    if (mParameters.isUbiFocusEnabled()||
                         mParameters.isChromaFlashEnabled()) {
                         rc = startAdvancedCapture(pCapChannel);
                         if (rc != NO_ERROR) {
@@ -3607,7 +3607,7 @@ char* QCamera2HardwareInterface::getParameters()
     strParams = (char *)malloc(sizeof(char)*(str.length()+1));
     if(strParams != NULL){
         memset(strParams, 0, sizeof(char)*(str.length()+1));
-        strncpy(strParams, str.string(), str.length());
+        strncpy(strParams, str.c_str(), str.length());
         strParams[str.length()] = 0;
     }
 
@@ -6573,11 +6573,11 @@ bool QCamera2HardwareInterface::needReprocess()
         return true;
     }
 
-    if (mParameters.isUbiFocusEnabled() |
-        mParameters.isMultiTouchFocusEnabled() |
-        mParameters.isChromaFlashEnabled() |
-        mParameters.isHDREnabled() |
-        mParameters.isfssrEnabled() |
+    if (mParameters.isUbiFocusEnabled() ||
+        mParameters.isMultiTouchFocusEnabled() ||
+        mParameters.isChromaFlashEnabled() ||
+        mParameters.isHDREnabled() ||
+        mParameters.isfssrEnabled() ||
         mParameters.isOptiZoomEnabled()) {
         CDBG_HIGH("%s: need reprocess for |UbiFocus=%d|ChramaFlash=%d"
                   "|OptiZoom=%d|fssr=%d|MultiTouchFocus=%d",__func__,
@@ -6760,20 +6760,20 @@ QCameraExif *QCamera2HardwareInterface::getExifData()
     rc = mParameters.getExifDateTime(dateTime,subsecTime);
     if(rc == NO_ERROR) {
         exif->addEntry(EXIFTAGID_EXIF_DATE_TIME_ORIGINAL, EXIF_ASCII,
-                (uint32_t)(dateTime.length() + 1), (void *)dateTime.string());
+                (uint32_t)(dateTime.length() + 1), (void *)dateTime.c_str());
 
 
         exif->addEntry(EXIFTAGID_EXIF_DATE_TIME_DIGITIZED, EXIF_ASCII,
-                (uint32_t)(dateTime.length() + 1), (void *)dateTime.string());
+                (uint32_t)(dateTime.length() + 1), (void *)dateTime.c_str());
 
         exif->addEntry(EXIFTAGID_SUBSEC_TIME, EXIF_ASCII,
-                (uint32_t)(subsecTime.length() + 1), (void *)subsecTime.string());
+                (uint32_t)(subsecTime.length() + 1), (void *)subsecTime.c_str());
 
         exif->addEntry(EXIFTAGID_SUBSEC_TIME_ORIGINAL, EXIF_ASCII,
-                (uint32_t)(subsecTime.length() + 1), (void *)subsecTime.string());
+                (uint32_t)(subsecTime.length() + 1), (void *)subsecTime.c_str());
 
         exif->addEntry(EXIFTAGID_SUBSEC_TIME_DIGITIZED, EXIF_ASCII,
-                (uint32_t)(subsecTime.length() + 1), (void *)subsecTime.string());
+                (uint32_t)(subsecTime.length() + 1), (void *)subsecTime.c_str());
 
     } else {
         ALOGE("%s: getExifDateTime failed", __func__);

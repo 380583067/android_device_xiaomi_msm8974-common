@@ -1,0 +1,9 @@
+# Camera HAL1 runs in cameraserver on this non-Treble device and opens
+# /dev/video* directly, rather than delegating to a separate camera HAL service.
+allow cameraserver video_device:chr_file rw_file_perms;
+
+# Camera HAL1 uses libhardware's power.default.so for recording hints.
+allow cameraserver legacy_power_hal_file:file { read open getattr execute map };
+
+# Load the passthrough provider when cameraserver starts with SELinux enforcing.
+allow cameraserver legacy_camera_hal_file:file { read open getattr execute map };

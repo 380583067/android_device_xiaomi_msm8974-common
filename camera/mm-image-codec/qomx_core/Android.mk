@@ -14,6 +14,7 @@ LOCAL_SRC_FILES := qomx_core.c
 
 LOCAL_MODULE           := libqomx_core
 LOCAL_SHARED_LIBRARIES := libcutils libdl liblog
-LOCAL_VENDOR_MODULE := true
+# Legacy non-Treble camera stack depends on private platform libraries.
+# Build and install in system alongside its platform dependencies.
 
 include $(BUILD_SHARED_LIBRARY)

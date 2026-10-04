@@ -24,6 +24,6 @@ allow qti_init_shell qmuxd_socket:sock_file { create setattr write };
 allow qti_init_shell persist_misc_file:file { getattr write setattr };
 allow qti_init_shell proc_net:dir rw_dir_perms;
 allow qti_init_shell sysfs_android_usb:file write;
-allow qti_init_shell exported3_default_prop:property_service { set };
+allow qti_init_shell default_prop:property_service { set };
 allow qti_init_shell firmware_file:dir rw_dir_perms;
 allow qti_init_shell firmware_file:file { rw_file_perms getattr };

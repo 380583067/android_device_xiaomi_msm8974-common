@@ -2,3 +2,6 @@ allow radio sysfs:file { getattr open read };
 
 # Allow binder communication with gpuservice
 binder_call(radio, gpuservice)
+
+# Qualcomm's OEM hook connects to the socket served by the legacy RIL.
+allow radio rild:unix_stream_socket connectto;

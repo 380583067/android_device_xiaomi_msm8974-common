@@ -1,0 +1,6 @@
+persist.vendor.timeadjust u:object_r:legacy_timeadjust_prop:s0 exact int
+
+# Legacy FunctionFS has no AIO support. Let vendor_init configure adbd's
+# existing compatibility switches before either system or APEX adbd starts.
+persist.adb.nonblocking_ffs u:object_r:adbd_config_prop:s0 exact bool
+ro.adb.nonblocking_ffs u:object_r:adbd_config_prop:s0 exact bool

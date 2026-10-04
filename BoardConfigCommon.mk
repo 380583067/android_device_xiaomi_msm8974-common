@@ -18,6 +18,9 @@ BOARD_VENDOR := xiaomi
 
 PLATFORM_PATH := device/xiaomi/msm8974-common
 
+# Apex
+OVERRIDE_TARGET_FLATTEN_APEX := true
+
 # ReleaseTools
 TARGET_RECOVERY_UPDATER_LIBS := librecovery_updater_xiaomi
 TARGET_BOARD_INFO_FILE := $(PLATFORM_PATH)/board-info.txt
@@ -26,6 +29,10 @@ TARGET_BOARD_INFO_FILE := $(PLATFORM_PATH)/board-info.txt
 TARGET_BOOTLOADER_BOARD_NAME := MSM8974
 TARGET_NO_BOOTLOADER         := true
 TARGET_NO_RADIOIMAGE         := true
+
+# Build
+BUILD_BROKEN_PREBUILT_ELF_FILES := true
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 
 # Platform
 TARGET_BOARD_PLATFORM     := msm8974
@@ -40,13 +47,20 @@ TARGET_CPU_SMP      := true
 TARGET_CPU_VARIANT  := generic
 TARGET_CPU_VARIANT_RUNTIME := krait
 
+# apex
+USE_CXX_STL := libc++_shared
+TARGET_USES_LEGACY_ICU := true
+
+# Allow duplicate rules to override them
+BUILD_BROKEN_DUP_RULES := true
+
 # ANT+
 BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
 
 # Audio
 BOARD_USES_ALSA_AUDIO                      := true
 USE_CUSTOM_AUDIO_POLICY                    := 1
-USE_XML_AUDIO_POLICY_CONF := 1
+USE_XML_AUDIO_POLICY_CONF                  := 1
 TARGET_USES_QCOM_MM_AUDIO                  := true
 AUDIO_FEATURE_ENABLED_COMPRESS_VOIP        := true
 AUDIO_FEATURE_ENABLED_EXTENDED_COMPRESS_FORMAT := true
@@ -61,13 +75,9 @@ AUDIO_FEATURE_ENABLED_USBAUDIO             := true
 AUDIO_FEATURE_ENABLED_SPKR_PROTECTION      := true
 AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
 
-# Binder API version
-TARGET_USES_64_BIT_BINDER := true
-
 # Bluetooth
 BOARD_HAVE_BLUETOOTH                        := true
 BOARD_HAVE_BLUETOOTH_QCOM                   := true
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(PLATFORM_PATH)/bluetooth
 QCOM_BT_USE_SMD_TTY                         := true
 BLUETOOTH_HCI_USE_MCT                       := true
 
@@ -115,13 +125,16 @@ TARGET_DISABLE_POSTRENDER_CLEANUP := true
 MAX_EGL_CACHE_KEY_SIZE := 12*1024
 MAX_EGL_CACHE_SIZE := 2048*1024
 
-# HIDL
+# HIDL Manifest
+PRODUCT_ENFORCE_VINTF_MANIFEST_OVERRIDE := true
 DEVICE_MANIFEST_FILE := $(PLATFORM_PATH)/manifest.xml
 DEVICE_MATRIX_FILE := $(PLATFORM_PATH)/compatibility_matrix.xml
+DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
+    $(PLATFORM_PATH)/framework_compatibility_matrix.xml \
+    vendor/lineage/config/device_framework_matrix.xml
 
 # Kernel
-BOARD_KERNEL_CMDLINE               := console=none vmalloc=340M androidboot.hardware=qcom msm_rtb.filter=0x3b7 ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1
-# BOARD_KERNEL_CMDLINE               += androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE := vmalloc=400M androidboot.hardware=qcom msm_rtb.filter=0x3b7 ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1 androidboot.selinux=enforcing log_buf_len=20M
 LZMA_RAMDISK_TARGETS               := boot,recovery
 BOARD_KERNEL_SEPARATED_DT          := true
 BOARD_KERNEL_BASE                  := 0x00000000
@@ -132,6 +145,8 @@ TARGET_KERNEL_SOURCE               := kernel/xiaomi/virgo
 TARGET_KERNEL_ARCH                 := arm
 TARGET_KERNEL_CONFIG               := virgo_defconfig
 BOARD_DTBTOOL_ARGS                 := -2
+TARGET_KERNEL_CLANG_COMPILE        := false
+TARGET_KERNEL_ADDITIONAL_FLAGS := HOSTCFLAGS="-fuse-ld=lld -Wno-unused-command-line-argument"
 
 # Lights
 TARGET_PROVIDES_LIBLIGHT := true
@@ -145,10 +160,10 @@ TARGET_USERIMAGES_USE_F2FS          := true
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE   := ext4
 BOARD_PERSISTIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_BOOTIMAGE_PARTITION_SIZE      := 16384000
-BOARD_RECOVERYIMAGE_PARTITION_SIZE  := 18384000
-BOARD_SYSTEMIMAGE_PARTITION_SIZE    := 1342177280
-BOARD_USERDATAIMAGE_PARTITION_SIZE  := 13291503000
-BOARD_CACHEIMAGE_PARTITION_SIZE     := 393216000
+BOARD_RECOVERYIMAGE_PARTITION_SIZE  := 32768000
+BOARD_SYSTEMIMAGE_PARTITION_SIZE    := 3072000000 # 3 Gb
+BOARD_USERDATAIMAGE_PARTITION_SIZE  := 11659595264
+BOARD_CACHEIMAGE_PARTITION_SIZE     := 500002816
 BOARD_PERSISTIMAGE_PARTITION_SIZE   := 16384000
 BOARD_FLASH_BLOCK_SIZE              := 131072
 BOARD_ROOT_EXTRA_FOLDERS           := firmware persist
@@ -156,6 +171,11 @@ BOARD_ROOT_EXTRA_FOLDERS           := firmware persist
 # Power
 TARGET_USES_INTERACTION_BOOST := true
 TARGET_POWERHAL_SET_INTERACTIVE_EXT := $(PLATFORM_PATH)/power/power_ext.c
+
+# Properties
+TARGET_SYSTEM_PROP += $(PLATFORM_PATH)/system.prop
+TARGET_PRODUCT_PROP += $(PLATFORM_PATH)/product.prop
+TARGET_VENDOR_PROP += $(PLATFORM_PATH)/vendor.prop
 
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE            := true
@@ -177,10 +197,12 @@ VENDOR_SECURITY_PATCH := 2017-06-01
 # SELinux
 include device/qcom/sepolicy-legacy/sepolicy.mk
 BOARD_SEPOLICY_DIRS += $(PLATFORM_PATH)/sepolicy
+SELINUX_IGNORE_NEVERALLOWS := true
 
 # Shims
 TARGET_LD_SHIM_LIBS := \
-    /system/vendor/lib/libril-qc-qmi-1.so|libaudioclient_shim.so
+    /system/vendor/lib/libril-qc-qmi-1.so|libaudioclient_shim.so \
+    /system/vendor/lib/libmm-abl.so|libshims_thermal.so
 
 # Time service
 BOARD_USES_QC_TIME_SERVICES := true
@@ -189,9 +211,6 @@ BOARD_USES_QC_TIME_SERVICES := true
 ifeq ($(WITH_TWRP),true)
 -include $(PLATFORM_PATH)/twrp/twrp.mk
 endif
-
-# Vintf
-PRODUCT_ENFORCE_VINTF_MANIFEST_OVERRIDE := true
 
 # Wifi
 BOARD_HAS_QCOM_WLAN              := true
@@ -210,6 +229,13 @@ TARGET_USES_QCOM_WCNSS_QMI       := true
 TARGET_USES_WCNSS_CTRL           := true
 
 # Dexpreopt
-WITH_DEXPREOPT_DEBUG_INFO := false
+ifeq ($(HOST_OS),linux)
+  ifneq ($(TARGET_BUILD_VARIANT),eng)
+      WITH_DEXPREOPT ?= true
+      WITH_DEXPREOPT_DEBUG_INFO := false
+      USE_DEX2OAT_DEBUG := false
+  endif
+endif
+WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := false
 
 -include vendor/xiaomi/msm8974-common/BoardConfigVendor.mk
