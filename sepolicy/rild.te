@@ -1,2 +1,5 @@
 #============= rild ==============
 allow rild zygote_exec:file execute;
+
+# rild must read the library path before it can register the radio HAL.
+get_prop(rild, vendor_rild_libpath_prop)

@@ -1,1 +1,5 @@
 get_prop(appdomain, exported_camera_prop);
+
+# SystemUI has a platform app UID on Android 14.
+allow platform_app sysfs_leds:dir search;
+allow platform_app legacy_torch_sysfs:file { read write open getattr };

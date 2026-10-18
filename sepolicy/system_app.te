@@ -9,3 +9,10 @@ allow system_app apk_data_file:dir write;
 allow system_app proc_pagetypeinfo:file getattr;
 allow system_app sysfs_zram:dir search;
 allow system_app unlabeled:dir search;
+
+
+# TimeKeep stores the RTC delta for the existing time_daemon service.
+set_prop(system_app, legacy_timeadjust_prop)
+r_dir_file(system_app, sysfs_rtc)
+allow system_app time_data_file:dir rw_dir_perms;
+allow system_app time_data_file:file create_file_perms;

@@ -1,8 +1,8 @@
-<manifest version="1.0" type="device">
+<manifest version="1.0" type="device" target-level="5">
     <hal format="hidl">
         <name>android.hardware.audio</name>
-        <transport arch="32">passthrough</transport>
-        <version>2.0</version>
+        <transport>hwbinder</transport>
+        <version>7.1</version>
         <interface>
             <name>IDevicesFactory</name>
             <instance>default</instance>
@@ -10,8 +10,8 @@
     </hal>
     <hal format="hidl">
         <name>android.hardware.audio.effect</name>
-        <transport arch="32">passthrough</transport>
-        <version>2.0</version>
+        <transport>hwbinder</transport>
+        <version>7.0</version>
         <interface>
             <name>IEffectsFactory</name>
             <instance>default</instance>
@@ -19,7 +19,7 @@
     </hal>
     <hal format="hidl">
         <name>android.hardware.bluetooth</name>
-        <transport arch="32">passthrough</transport>
+        <transport>hwbinder</transport>
         <version>1.0</version>
         <interface>
             <name>IBluetoothHci</name>
@@ -27,9 +27,22 @@
         </interface>
     </hal>
     <hal format="hidl">
+        <name>android.hardware.bluetooth.audio</name>
+        <transport>hwbinder</transport>
+        <version>2.1</version>
+        <interface>
+            <name>IBluetoothAudioProvidersFactory</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
         <name>android.hardware.broadcastradio</name>
         <transport arch="32">passthrough</transport>
         <version>1.0</version>
+        <interface>
+            <name>IBroadcastRadio</name>
+            <instance>default</instance>
+        </interface>
     </hal>
     <hal format="hidl">
         <name>android.hardware.camera.provider</name>
@@ -38,6 +51,15 @@
         <interface>
             <name>ICameraProvider</name>
             <instance>legacy/0</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
+        <name>android.frameworks.cameraservice.service</name>
+        <transport>hwbinder</transport>
+        <version>2.2</version>
+        <interface>
+            <name>ICameraService</name>
+            <instance>default</instance>
         </interface>
     </hal>
     <hal format="hidl">
@@ -95,15 +117,6 @@
         <version>2.0</version>
         <interface>
             <name>IMapper</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="hidl">
-        <name>android.hardware.keymaster</name>
-        <transport>hwbinder</transport>
-        <version>3.0</version>
-        <interface>
-            <name>IKeymasterDevice</name>
             <instance>default</instance>
         </interface>
     </hal>
@@ -197,6 +210,15 @@
         </interface>
     </hal>
     <hal format="hidl">
+        <name>android.hardware.thermal</name>
+        <transport>hwbinder</transport>
+        <version>1.0</version>
+        <interface>
+            <name>IThermal</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
         <name>android.hardware.vibrator</name>
         <transport>hwbinder</transport>
         <version>1.0</version>
@@ -219,15 +241,6 @@
         </interface>
         <interface>
             <name>IDisplayColorCalibration</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="hidl">
-        <name>vendor.qti.hardware.cryptfshw</name>
-        <transport>hwbinder</transport>
-        <version>1.0</version>
-        <interface>
-            <name>ICryptfsHw</name>
             <instance>default</instance>
         </interface>
     </hal>

@@ -1,3 +1,25 @@
 #============= cmhw ==============
 type display_sysfs, sysfs_type, file_type;
 type vibeamp_sysfs, sysfs_type, file_type;
+
+# Legacy libhardware power module loaded directly by Camera HAL1.
+type legacy_power_hal_file, file_type, vendor_file_type;
+
+# The passthrough camera provider runs in cameraserver on this legacy device.
+type legacy_camera_hal_file, file_type, vendor_file_type;
+
+# SensorService loads the legacy passthrough sensors provider in system_server.
+type legacy_sensors_hal_file, file_type, vendor_file_type;
+
+# HAL1 torch node, accessed only by privileged SystemUI.
+type legacy_torch_sysfs, sysfs_type, file_type, mlstrustedobject;
+
+# Legacy GNSS and soundtrigger providers loaded by system_server.
+type legacy_system_hal_file, file_type, vendor_file_type;
+# Legacy positioning configurations shipped on the system partition.
+type legacy_location_config_file, file_type, vendor_file_type;
+
+# ACDB calibration data consumed by the legacy vendor audio HAL.
+type legacy_audio_config_file, file_type, vendor_file_type;
+# Legacy iptables binary invoked by the modem's network manager and netd.
+type legacy_iptables_exec, file_type, system_file_type, exec_type;

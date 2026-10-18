@@ -1,7 +1,7 @@
 #============= shell ==============
 allow shell init_exec:file getattr;
 allow shell sysfs_graphics:file getattr;
-allow shell adbd_prop:file { getattr open };
+allow shell default_prop:file { getattr open };
 allow shell sysfs:file rw_file_perms;
 allow shell alarm_boot_prop:file { getattr open };
 allow shell alarm_handled_prop:file { getattr open };

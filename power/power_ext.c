@@ -19,7 +19,7 @@
 #include <fcntl.h>
 
 #define LOG_TAG "PowerHAL_H_Ext"
-#include <utils/Log.h>
+#include <log/log.h>
 
 #define GPIO_KEYS_POWER_1 "/sys/class/input/input1/enabled"
 #define GPIO_KEYS_POWER_2 "/sys/class/input/input2/enabled"

@@ -199,10 +199,10 @@
             </routes>
 
         </module>
-
-        <!-- A2dp Audio HAL -->
-        <xi:include href="/vendor/etc/a2dp_audio_policy_configuration.xml"/>
-
+        
+        <!-- Bluetooth Audio HAL -->
+        <xi:include href="/vendor/etc/bluetooth_audio_policy_configuration.xml"/>
+        
         <!-- Usb Audio HAL -->
         <xi:include href="/vendor/etc/usb_audio_policy_configuration.xml"/>
 
@@ -213,8 +213,10 @@
     <!-- End of Modules section -->
 
     <!-- Volume section -->
+
     <xi:include href="/vendor/etc/audio_policy_volumes.xml"/>
     <xi:include href="/vendor/etc/default_volume_tables.xml"/>
+
     <!-- End of Volume section -->
 
 </audioPolicyConfiguration>

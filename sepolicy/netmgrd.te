@@ -1,2 +1,5 @@
 #============= netmgrd ==============
 allow netmgrd self:capability dac_override;
+# Preserve direct execution for core network tools and the legacy modem daemon.
+allow { netmgrd netd netutils_wrapper shell } legacy_iptables_exec:file { rx_file_perms execute_no_trans };
+allow { netmgrd netd netutils_wrapper shell } legacy_iptables_exec:lnk_file r_file_perms;

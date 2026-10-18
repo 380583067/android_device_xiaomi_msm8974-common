@@ -33,6 +33,7 @@ LOCAL_MODULE := libmmcamera_interface
 LOCAL_SHARED_LIBRARIES := libdl libcutils liblog
 LOCAL_HEADER_LIBRARIES += camera_common_headers
 LOCAL_MODULE_TAGS := optional
-LOCAL_VENDOR_MODULE := true
+# Legacy non-Treble camera stack depends on private platform libraries.
+# Build and install in system alongside its platform dependencies.
 
 include $(BUILD_SHARED_LIBRARY)

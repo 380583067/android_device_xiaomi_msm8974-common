@@ -1,0 +1,4 @@
+get_prop(time_daemon, legacy_timeadjust_prop)
+r_dir_file(time_daemon, sysfs_rtc)
+allow time_daemon sysfs:file r_file_perms;
+allow time_daemon time_data_file:dir r_dir_perms;

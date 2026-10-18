@@ -12,7 +12,7 @@ allow bdaddr bluetooth_data_file:file { create_file_perms setattr };
 
 allow bdaddr diag_device:chr_file rw_file_perms;
 
-allow bdaddr self:capability { fsetid dac_override };
+allow bdaddr self:capability { chown fsetid dac_override };
 
 allow bdaddr smem_log_device:chr_file rw_file_perms;
 allow bdaddr self:socket { create read write ioctl };
