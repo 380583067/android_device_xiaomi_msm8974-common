@@ -21,13 +21,10 @@ DEVICE_PACKAGE_OVERLAYS += \
 
 # Permissions
 PRODUCT_COPY_FILES += \
-    external/ant-wireless/antradio-library/com.dsi.ant.antradio_library.xml:system/vendor/etc/permissions/com.dsi.ant.antradio_library.xml \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/vendor/etc/permissions/handheld_core_hardware.xml \
     frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/vendor/etc/permissions/android.hardware.audio.low_latency.xml \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/vendor/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/vendor/etc/permissions/android.hardware.camera.front.xml \
-    frameworks/native/data/etc/android.hardware.camera.full.xml:system/vendor/etc/permissions/android.hardware.camera.full.xml \
-    frameworks/native/data/etc/android.hardware.camera.raw.xml:system/vendor/etc/permissions/android.hardware.camera.raw.xml \
     frameworks/native/data/etc/android.hardware.location.gps.xml:system/vendor/etc/permissions/android.hardware.location.gps.xml \
     frameworks/native/data/etc/android.hardware.opengles.aep.xml:system/vendor/etc/permissions/android.hardware.opengles.aep.xml \
     frameworks/native/data/etc/android.hardware.wifi.xml:system/vendor/etc/permissions/android.hardware.wifi.xml \
@@ -51,25 +48,34 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.print.xml:system/vendor/etc/permissions/android.software.print.xml
 
 # ANT+
+# Android 14's source tree no longer provides the legacy Java shared-library
+# package or its permission XML. Keep the ANT HIDL service and native radio
+# driver, which are built from external/ant-wireless, and drop only that
+# obsolete application-library declaration.
 PRODUCT_PACKAGES += \
     AntHalService \
-    com.dsi.ant.antradio_library \
     libantradio
+
+# Linux 3.4 has no cgroup v2. Supply the v1 process-tracking hierarchy used
+# by libprocessgroup's mounted-controller fallback.
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/rootdir/etc/cgroups.json:$(TARGET_COPY_OUT_VENDOR)/etc/cgroups.json
 
 # APEX
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/ld.config.txt:system/etc/swcodec/ld.config.txt
 
 # Audio
+# Android 14's legacy Qualcomm primary HAL is hosted by the HIDL 6.0 wrapper;
+# keep the generic service binary and MSM8974 implementation paired with the
+# matching manifest version. audio_policy.msm8974 is obsolete, and audiod is
+# optional with no init service here, so neither old package is requested.
 PRODUCT_PACKAGES += \
     android.hardware.audio.service \
-    android.hardware.audio@2.0-impl \
-    android.hardware.audio.effect@2.0-impl \
+    android.hardware.audio@6.0-impl \
+    android.hardware.audio.effect@6.0-impl \
     android.hardware.broadcastradio@1.0-impl \
     android.hardware.soundtrigger@2.0-impl \
-    audiod \
-    audio.a2dp.default \
-    audio_policy.msm8974 \
     audio.primary.msm8974 \
     audio.r_submix.default \
     audio.usb.default \
@@ -85,7 +91,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/listen_platform_info.xml:system/vendor/etc/listen_platform_info.xml
 
 PRODUCT_COPY_FILES += \
-    frameworks/av/services/audiopolicy/config/a2dp_audio_policy_configuration.xml:system/vendor/etc/a2dp_audio_policy_configuration.xml \
+    frameworks/av/services/audiopolicy/config/bluetooth_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/bluetooth_audio_policy_configuration.xml \
     frameworks/av/services/audiopolicy/config/audio_policy_volumes.xml:system/vendor/etc/audio_policy_volumes.xml \
     frameworks/av/services/audiopolicy/config/default_volume_tables.xml:system/vendor/etc/default_volume_tables.xml \
     frameworks/av/services/audiopolicy/config/r_submix_audio_policy_configuration.xml:system/vendor/etc/r_submix_audio_policy_configuration.xml \
@@ -94,29 +100,39 @@ PRODUCT_COPY_FILES += \
 # Baseband assertion
 PRODUCT_PACKAGES += librecovery_updater_xiaomi
 
-# Bluetooth
+# Android 14's A2DP policy routes through the Bluetooth Audio HIDL 2.1
+# provider and Bluetooth audio hardware module. Keep these paired with the
+# manifest and bluetooth_audio_policy_configuration.xml include; the retired
+# standalone platform A2DP module is not part of this stack.
 PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.0-impl \
+    android.hardware.bluetooth.audio@2.1-impl \
+    audio.bluetooth.default \
     bdaddr_xiaomi \
     libbt-vendor
 
 # Camera
+# The old LineageOS Snap package is not present in this Android 14 source
+# checkout. Use the maintained AOSP Camera2 module while keeping the MSM8974
+# camera provider and device HALs required by the proprietary camera stack.
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
     camera.device@1.0-impl \
     camera.msm8974 \
     libxml2 \
-    Snap
+    Camera2
+
+# Charger
+PRODUCT_PACKAGES += \
+    chargeonlymode
 
 # Filesystem management tools
+# Android 14's host-side image tools replace the old on-device make_ext4fs,
+# setup_fs, mkntfs, dumpe2fs, and mke2fs_static module names. Keep only the
+# e2fsprogs runtime modules that still exist and are useful for device repair.
 PRODUCT_PACKAGES += \
-    make_ext4fs \
-    setup_fs \
-    mkntfs \
-    dumpe2fs \
     resize2fs \
     e2fsck_static \
-    mke2fs_static \
     resize2fs_static
 
 # Gatekeeper
@@ -127,13 +143,17 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.gnss@1.0-impl.legacy \
     android.hardware.gnss@1.0-service.legacy \
-    gps.msm8974
+    gps.msm8974 \
+    msm8974_gps_conf_legacy_link \
+    msm8974_flp_conf_legacy_link \
+    msm8974_izat_conf_legacy_link \
+    msm8974_sap_conf_legacy_link
  
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/gps/etc/gps.conf:system/etc/gps.conf \
-    $(LOCAL_PATH)/gps/etc/flp.conf:system/etc/flp.conf \
-    $(LOCAL_PATH)/gps/etc/izat.conf:system/etc/izat.conf \
-    $(LOCAL_PATH)/gps/etc/sap.conf:system/etc/sap.conf
+    $(LOCAL_PATH)/gps/etc/gps.conf:system/vendor/etc/gps.conf \
+    $(LOCAL_PATH)/gps/etc/flp.conf:system/vendor/etc/flp.conf \
+    $(LOCAL_PATH)/gps/etc/izat.conf:system/vendor/etc/izat.conf \
+    $(LOCAL_PATH)/gps/etc/sap.conf:system/vendor/etc/sap.conf
 
 # Graphics
 PRODUCT_PACKAGES += \
@@ -148,8 +168,7 @@ PRODUCT_PACKAGES += \
     gralloc.msm8974 \
     hwcomposer.msm8974 \
     memtrack.msm8974 \
-    liboverlay \
-    libgenlock
+    liboverlay
 
 # Health
 PRODUCT_PACKAGES += \
@@ -167,7 +186,10 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/keylayout/msm8974-taiko-mtp-snd-card_Button_Jack.kl:system/vendor/usr/keylayout/msm8974-taiko-mtp-snd-card_Button_Jack.kl \
     $(LOCAL_PATH)/keylayout/synaptics_rmi4_i2c.kl:system/vendor/usr/keylayout/synaptics_rmi4_i2c.kl
 
-# Keymaster
+# Keep the legacy Keymaster 3.0 service because this MSM8974 vendor set ships
+# the original Keymaster firmware but no verified 4.1 device adapter. The
+# Cancro reference's 4.1 service is not interchangeable with this secure-world
+# interface; declaring both would also advertise duplicate keymaster services.
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@3.0-impl \
     android.hardware.keymaster@3.0-service
@@ -199,11 +221,11 @@ PRODUCT_PACKAGES += \
     libstagefrighthw
 
 # Misc dependency packages
+# Android 14's QCOM Wi-Fi and hostapd builds select external/libnl's libnl
+# module directly. The old libnl_2 alias, ebtables/ethertypes helpers, and
+# libbson are not provided by this tree and have no device-tree consumers.
 PRODUCT_PACKAGES += \
-    ebtables \
-    ethertypes \
-    libnl_2 \
-    libbson
+    libnl
 
 # Power
 PRODUCT_PACKAGES += \
@@ -260,9 +282,10 @@ PRODUCT_PACKAGES += \
     android.hardware.sensors@1.0-impl
 
 # SoftAP
+# The legacy QSAP SDK/configuration helper packages were removed from the
+# Android 14 Qualcomm source set. Keep the WCNSS QMI helper and service, which
+# are present in this tree and used by this device's Wi-Fi initialization.
 PRODUCT_PACKAGES += \
-    libqsap_sdk \
-    libQWiFiSoftApCfg \
     libwcnss_qmi \
     wcnss_service
 
@@ -270,18 +293,22 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/thermal-engine-perf.conf:system/vendor/etc/thermal-engine-perf.conf
 
+# Publish the Android 14 HIDL thermal service using the source tree's generic
+# thermal implementation. The proprietary thermal-engine daemon remains the
+# MSM8974 policy/tuning component and is kept separately above.
+PRODUCT_PACKAGES += \
+    android.hardware.thermal@1.0-impl \
+    android.hardware.thermal@1.0-service \
+    thermal.default
+
 # TimeKeep
 PRODUCT_PACKAGES += \
     timekeep \
     TimeKeep
 
-# Trust HAL
-PRODUCT_PACKAGES += \
-    vendor.lineage.trust@1.0-service
-
-# USB HAL
-PRODUCT_PACKAGES += \
-    android.hardware.usb@1.0-service.basic
+# USB is provided through the MSM8974 legacy gadget init rules and Android's
+# FunctionFS ADB path. The retired HIDL basic USB service is not part of the
+# Android 14 source tree and is not declared by this device's VINTF manifest.
 
 # Vibrator
 PRODUCT_PACKAGES += \
@@ -291,6 +318,7 @@ PRODUCT_PACKAGES += \
 # WiFi
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/wifi/WCNSS_cfg.dat:system/vendor/firmware/wlan/prima/WCNSS_cfg.dat \
+    $(LOCAL_PATH)/wifi/WCNSS_qcom_cfg.ini:system/vendor/etc/wifi/WCNSS_qcom_cfg.ini \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_cfg.ini:system/vendor/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_wlan_nv_x5.bin:system/vendor/firmware/wlan/prima/WCNSS_qcom_wlan_nv_x5.bin
 

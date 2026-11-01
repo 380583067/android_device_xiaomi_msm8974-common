@@ -1,0 +1,19 @@
+# A dedicated core domain is needed because the platform logpersist domain is
+# restricted to /data/misc/logd and cannot write /cache, even when run as root.
+type cache_logger, domain, coredomain;
+
+# The service's explicit seclabel selects this domain. Keep the platform's
+# default init -> logcat_exec -> logpersist transition unchanged.
+domain_trans(init, logcat_exec, cache_logger)
+
+read_logd(cache_logger)
+get_prop(cache_logger, logd_prop)
+
+# /cache is prepared by core init and uses the existing cache_file label.
+# Directory modification and file rename/unlink are needed for log rotation.
+allow cache_logger cache_file:dir rw_dir_perms;
+allow cache_logger cache_file:file create_file_perms;
+
+# logcat moves continuous file logging into the background scheduling group.
+r_dir_file(cache_logger, cgroup)
+r_dir_file(cache_logger, cgroup_v2)

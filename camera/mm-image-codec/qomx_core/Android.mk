@@ -14,6 +14,7 @@ LOCAL_SRC_FILES := qomx_core.c
 
 LOCAL_MODULE           := libqomx_core
 LOCAL_SHARED_LIBRARIES := libcutils libdl liblog
-LOCAL_VENDOR_MODULE := true
+# The MSM8974 camera/JPEG stack is a legacy platform HAL on this non-Treble
+# device, so keep its shared codec helper in the same platform linker domain.
 
 include $(BUILD_SHARED_LIBRARY)

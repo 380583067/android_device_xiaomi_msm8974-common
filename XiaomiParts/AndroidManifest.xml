@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.lineageos.device"
     android:sharedUserId="android.uid.system" >
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
@@ -12,6 +13,15 @@
         android:label="@string/advanced_settings"
         android:theme="@style/AppTheme"
         android:supportsRtl="true" >
+        <!-- SettingsLib and AndroidX Core both contribute AndroidX Startup's provider when
+             linked as static libraries. Merge them into one app-owned provider and replace the
+             library authorities so manifest-merger does not emit duplicate provider identities. -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="org.lineageos.device.androidx-startup"
+            android:exported="false"
+            tools:node="merge"
+            tools:replace="android:authorities" />
         <activity
             android:name="org.lineageos.device.DeviceSettingsActivity"
             android:label="@string/advanced_settings" >

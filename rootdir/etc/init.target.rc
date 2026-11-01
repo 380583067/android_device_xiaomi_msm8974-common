@@ -29,6 +29,10 @@
 
 on early-init
     symlink /data/tombstones /tombstones
+    # /acct is a mount point on the read-only system-as-root partition.
+    # Set ownership only after CgroupSetup has mounted the writable v1 fs.
+    chown system system /acct
+    chmod 0775 /acct
 
 on init
     # Set the property to indicate type of virtual display to 0
@@ -45,6 +49,9 @@ on init
 
 on fs
     mount_all /vendor/etc/fstab.qcom
+    # mount_all ignores swap entries; activate the configured zram device now,
+    # before framework services start and begin competing for physical RAM.
+    swapon_all /vendor/etc/fstab.qcom
 
     # Keeping following partitions outside fstab file. As user may not have
     # these partition flashed on the device. Failure to mount any partition in fstab file
@@ -56,7 +63,7 @@ on fs
     mkdir /persist/data/tz 0700 system system
     mkdir /persist/audio 0771 media audio
 
-    mount vfat /dev/block/platform/msm_sdcc.1/by-name/modem /firmware ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+    # fstab.qcom already mounted /firmware with its SELinux mount context.
 
 on post-fs-data
     mkdir /data/tombstones 0771 system system
@@ -163,7 +170,8 @@ service qseecomd /vendor/bin/qseecomd
 service mpdecision /vendor/bin/mpdecision --avg_comp
    class main
    user root
-   group root readproc
+   # CPU frequency limits are system:system 0664; use their owning group.
+   group root system readproc
    disabled
 
 service adsprpcd /vendor/bin/adsprpcd
@@ -198,7 +206,8 @@ on property:init.svc.surfaceflinger=stopped
 service thermal-engine /system/vendor/bin/thermal-engine --config /system/vendor/etc/thermal-engine-perf.conf
     class main
     user root
-    group root
+    # Init assigns CPU/thermal control nodes to system; avoid DAC bypass.
+    group root system
     socket thermal-send-client stream 0666 system system
     socket thermal-recv-client stream 0660 system system
     socket thermal-recv-passive-client stream 0666 system system

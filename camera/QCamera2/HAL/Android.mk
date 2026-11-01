@@ -58,7 +58,8 @@ LOCAL_SHARED_LIBRARIES += android.hardware.graphics.bufferqueue@1.0
 
 LOCAL_MODULE_RELATIVE_PATH := hw
 LOCAL_MODULE := camera.$(TARGET_BOARD_PLATFORM)
-LOCAL_VENDOR_MODULE := true
+# This legacy HAL links private platform libraries (camera_client, gui, sensor)
+# and the device disables Treble, so keep it in the platform linker domain.
 LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)

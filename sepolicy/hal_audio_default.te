@@ -1,0 +1,2 @@
+# The Qualcomm audio HAL registers thermal clients for speaker protection.
+unix_socket_connect(hal_audio_default, thermal, thermal-engine)

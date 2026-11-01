@@ -38,6 +38,11 @@ LOCAL_LDFLAGS += -Wl,--export-dynamic
 LOCAL_C_INCLUDES:= \
     $(LOCAL_PATH)/platform_lib_abstractions
 
+# Android 14 no longer exposes hardware/gps.h through an ambient include path.
+# Declare the platform header library explicitly so this legacy Qualcomm
+# utility module resolves the canonical libhardware GPS interface.
+LOCAL_HEADER_LIBRARIES := libhardware_headers
+
 LOCAL_MODULE := libgps.utils
 LOCAL_PROPRIETARY_MODULE := true
 

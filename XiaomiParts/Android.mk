@@ -6,6 +6,13 @@ LOCAL_STATIC_ANDROID_LIBRARIES := \
     androidx.core_core \
     androidx.preference_preference
 
+# The merged manifest inherits these optional uses-library tags from its
+# AndroidX dependency manifests. Keep the legacy Make metadata in sync so
+# ART's dexpreopt class-loader context matches the final APK manifest.
+LOCAL_OPTIONAL_USES_LIBRARIES := \
+    androidx.window.extensions \
+    androidx.window.sidecar
+
 LOCAL_SRC_FILES := $(call all-java-files-under, src)
 LOCAL_PACKAGE_NAME := XiaomiParts
 LOCAL_CERTIFICATE := platform

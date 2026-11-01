@@ -200,8 +200,9 @@
 
         </module>
 
-        <!-- A2dp Audio HAL -->
-        <xi:include href="/vendor/etc/a2dp_audio_policy_configuration.xml"/>
+        <!-- Android 14 Bluetooth Audio HAL; keep this include paired with the
+             vendor copy and Bluetooth Audio HIDL 2.1 provider modules. -->
+        <xi:include href="/vendor/etc/bluetooth_audio_policy_configuration.xml"/>
 
         <!-- Usb Audio HAL -->
         <xi:include href="/vendor/etc/usb_audio_policy_configuration.xml"/>

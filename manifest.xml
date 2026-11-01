@@ -1,8 +1,14 @@
-<manifest version="1.0" type="device" target-level="legacy">
+<manifest version="1.0" type="device" target-level="5">
+    <!-- MSM8974's Android 14 port targets FCM 5: the platform has no
+         framework matrix for the legacy level, and these declared HALs are
+         validated against the level-5 compatibility matrix. -->
+    <!-- The Qualcomm primary audio HAL remains legacy, but Android 14's
+         supported HIDL wrapper is 6.0; keep this declaration matched to the
+         implementation and effects modules installed by msm8974-common.mk. -->
     <hal format="hidl">
         <name>android.hardware.audio</name>
         <transport>hwbinder</transport>
-        <version>2.0</version>
+        <version>6.0</version>
         <interface>
             <name>IDevicesFactory</name>
             <instance>default</instance>
@@ -11,9 +17,21 @@
     <hal format="hidl">
         <name>android.hardware.audio.effect</name>
         <transport>hwbinder</transport>
-        <version>2.0</version>
+        <version>6.0</version>
         <interface>
             <name>IEffectsFactory</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <!-- A2DP is served through the Android 14 Bluetooth Audio provider, not
+         the retired standalone A2DP HIDL service. This instance is paired
+         with audio.bluetooth.default and the 2.1 implementation library. -->
+    <hal format="hidl">
+        <name>android.hardware.bluetooth.audio</name>
+        <transport>hwbinder</transport>
+        <version>2.1</version>
+        <interface>
+            <name>IBluetoothAudioProvidersFactory</name>
             <instance>default</instance>
         </interface>
     </hal>
@@ -30,6 +48,13 @@
         <name>android.hardware.broadcastradio</name>
         <transport arch="32">passthrough</transport>
         <version>1.0</version>
+        <!-- Android 14 checkvintf requires the passthrough factory interface
+             instance to be explicit; this is the 1.0 interface implemented
+             by the legacy 32-bit broadcast radio module above. -->
+        <interface>
+            <name>IBroadcastRadioFactory</name>
+            <instance>default</instance>
+        </interface>
     </hal>
     <hal format="hidl">
         <name>android.hardware.camera.provider</name>
@@ -98,12 +123,27 @@
             <instance>default</instance>
         </interface>
     </hal>
+    <!-- This device's bundled QCOM trustlet is the legacy Keymaster path.
+         Do not advertise the newer Cancro 4.1 service without a matching
+         MSM8974 adapter, which could break keystore-backed boot services. -->
     <hal format="hidl">
         <name>android.hardware.keymaster</name>
         <transport>hwbinder</transport>
         <version>3.0</version>
         <interface>
             <name>IKeymasterDevice</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <!-- The generic thermal HIDL 1.0 service is distinct from the vendor's
+         thermal-engine policy daemon and exposes the compatibility interface
+         expected by Android 14 framework clients. -->
+    <hal format="hidl">
+        <name>android.hardware.thermal</name>
+        <transport>hwbinder</transport>
+        <version>1.0</version>
+        <interface>
+            <name>IThermal</name>
             <instance>default</instance>
         </interface>
     </hal>

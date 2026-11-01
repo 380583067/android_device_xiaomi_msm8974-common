@@ -1,2 +1,6 @@
 #============= rild ==============
-allow rild zygote_exec:file execute;
+# rild must read the configured Qualcomm library instead of idling without one.
+get_prop(rild, vendor_rild_libpath_prop)
+# Qualcomm's framework radio client uses the OEM-hook socket hosted by rild.
+allow radio rild:unix_stream_socket connectto;
+get_prop(radio, vendor_legacy_radio_prop)

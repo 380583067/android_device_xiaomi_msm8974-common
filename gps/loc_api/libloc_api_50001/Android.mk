@@ -42,13 +42,17 @@ LOCAL_C_INCLUDES:= \
     $(LOCAL_PATH) \
     $(TARGET_OUT_HEADERS)/libflp
 
-LOCAL_HEADER_LIBRARIES := libgps.utils_headers libloc_core_headers
+# Android 14 requires hardware/gps.h to arrive through an explicit header
+# library; keep both Qualcomm API header sets alongside libhardware_headers.
+LOCAL_HEADER_LIBRARIES := libgps.utils_headers libloc_core_headers libhardware_headers
 
 include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := libloc_eng_headers
 LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)
+# loc_eng public headers also include hardware/gps.h, so export that dependency.
+LOCAL_HEADER_LIBRARIES := libhardware_headers
 include $(BUILD_HEADER_LIBRARY)
 
 include $(CLEAR_VARS)
@@ -85,6 +89,8 @@ LOCAL_C_INCLUDES:= \
 
 LOCAL_MODULE_RELATIVE_PATH := hw
 
-LOCAL_HEADER_LIBRARIES := libgps.utils_headers libloc_core_headers
+# This HAL compiles the legacy GPS ABI and needs the same explicit Android 14
+# libhardware header dependency as the Qualcomm location libraries above.
+LOCAL_HEADER_LIBRARIES := libgps.utils_headers libloc_core_headers libhardware_headers
 
 include $(BUILD_SHARED_LIBRARY)

@@ -40,18 +40,18 @@ case $POWER_CLASS in
      logi "Power Class: To override, Before turning BT ON; setprop qcom.bt.dev_power_class <1 or 2 or 3>";;
 esac
 
-if [$BDADDR == ""]
+if [ -z "$BDADDR" ]
 then
 /vendor/bin/hci_qcomm_init -e $PWR_CLASS
 else
-/vendor/bin/hci_qcomm_init -b $BDADDR -e $PWR_CLASS
+/vendor/bin/hci_qcomm_init -b "$BDADDR" -e $PWR_CLASS
 fi
+exit_code_hci_qcomm_init=$?
 
-case $? in
+case $exit_code_hci_qcomm_init in
   0) logi "Bluetooth QSoC firmware download succeeded, $BTS_DEVICE $BTS_TYPE $BTS_BAUD $BTS_ADDRESS";;
-  *) failed "Bluetooth QSoC firmware download failed" $exit_code_hci_qcomm_init;
-     setprop vendor.bluetooth.status off
-     exit $exit_code_hci_qcomm_init;;
+  *) setprop vendor.bluetooth.status off
+     failed "Bluetooth QSoC firmware download failed" "$exit_code_hci_qcomm_init";;
 esac
 
 setprop vendor.bluetooth.status on

@@ -33,6 +33,7 @@ LOCAL_MODULE := libmmcamera_interface
 LOCAL_SHARED_LIBRARIES := libdl libcutils liblog
 LOCAL_HEADER_LIBRARIES += camera_common_headers
 LOCAL_MODULE_TAGS := optional
-LOCAL_VENDOR_MODULE := true
+# This support library is loaded by the legacy camera HAL and stays in the
+# platform partition with it because MSM8974 is built without a Treble boundary.
 
 include $(BUILD_SHARED_LIBRARY)

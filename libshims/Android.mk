@@ -20,6 +20,7 @@ LOCAL_SRC_FILES := libaudioclient_shim.cpp
 LOCAL_MODULE := libaudioclient_shim
 LOCAL_MODULE_CLASS := SHARED_LIBRARIES
 LOCAL_SHARED_LIBRARIES := libaudioclient
-LOCAL_VENDOR_MODULE := true
+# The shim calls the platform-only libaudioclient. Keep it in /system so the
+# non-Treble RIL linker shim can load it without a vendor-to-platform link.
 
 include $(BUILD_SHARED_LIBRARY)

@@ -289,8 +289,8 @@ on enable-low-power
     write /sys/module/msm_thermal/core_control/enabled 1
 
 on charger
-    wait /dev/block/platform/msm_sdcc.1/by-name/system
-    mount ext4 /dev/block/platform/msm_sdcc.1/by-name/system /system wait ro barrier=1
+    # First-stage init already mounted system-as-root. Do not mount the system
+    # partition again at /system; that breaks legacy /vendor symlink resolution.
     start irsc_util
     start rmt_storage
     # Enable Power modes and set the CPU Freq Sampling rates
@@ -465,10 +465,6 @@ service qcom-c_main-sh /vendor/bin/sh /vendor/bin/init.class_main.sh
     user root
     oneshot
 
-on property:init.svc.bdaddr=stopped
-    chmod 644 /data/misc/bluetooth/bdaddr
-    chown bluetooth bluetooth /data/misc/bluetooth/bdaddr
-
 on property:vold.decrypt=trigger_restart_framework
     start qcom-c_main-sh
 
@@ -482,8 +478,10 @@ service irsc_util /vendor/bin/irsc_util "/vendor/etc/sec_config"
 
 service bdaddr /vendor/bin/bdaddr_xiaomi
     class core
-    user root
-    group system
+    # Create the address as its final owner; vendor init cannot watch the
+    # private init.svc.bdaddr property on Android 14 to repair ownership later.
+    user bluetooth
+    group bluetooth radio
     oneshot
 
 service rmt_storage /vendor/bin/rmt_storage
@@ -506,6 +504,7 @@ service hciattach /vendor/bin/sh /vendor/bin/init.qcom.bt.sh
     class late_start
     user bluetooth
     group bluetooth net_bt_admin
+    seclabel u:r:bluetooth_loader:s0
     disabled
     oneshot
 
@@ -570,6 +569,12 @@ on property:ro.data.large_tcp_window_size=true
     # Adjust socket buffer to enlarge TCP receive window for high bandwidth (e.g. DO-RevB)
     write /proc/sys/net/ipv4/tcp_adv_win_scale  2
 
+# The legacy Qualcomm DSDS library uses one single-SIM callback ABI per
+# process. Start its second instance from init instead of the old shell's
+# property/control sequence, which can finish without starting this service.
+on boot && property:persist.radio.multisim.config=dsds
+    start ril-daemon2
+
 service ril-daemon2 /system/vendor/bin/hw/rild -c 2
     class main
     socket rild2 stream 660 root radio
@@ -586,10 +591,13 @@ service ril-daemon3 /system/vendor/bin/hw/rild -c 3
     disabled
     group radio cache inet misc audio sdcard_r sdcard_rw diag oem_2950 log net_raw
 
-service charger /system/bin/charger
+service charger /system/bin/chargeonlymode
     class charger
     group system graphics
     seclabel u:r:charger:s0
+
+on charger
+    write /sys/class/leds/lcd-backlight/brightness 100
 
 # SSR setting
 on property:persist.sys.ssr.restart_level=*

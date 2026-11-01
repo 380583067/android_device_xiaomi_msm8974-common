@@ -1144,7 +1144,9 @@ void QCameraPostProcessor::releaseNotifyData(void *user_data,
 
             String8 unlinkPath((const char *) app_cb->release_data.data->data,
                                 app_cb->release_data.data->size);
-            int rc = unlink(unlinkPath.string());
+            // String8::string() is private on Android 14; c_str() exposes the
+            // same null-terminated path through the supported public API.
+            int rc = unlink(unlinkPath.c_str());
             CDBG_HIGH("%s : Unlinking stored file rc = %d",
                   __func__,
                   rc);

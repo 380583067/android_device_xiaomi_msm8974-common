@@ -1,3 +1,14 @@
+# Charger
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.charger.enable_suspend=true
+
+# Linux 3.4 FunctionFS has no asynchronous I/O support. Select adbd's
+# blocking legacy transport before the daemon starts; aio_compat is set in rc.
+PRODUCT_SYSTEM_PROPERTIES += ro.adb.nonblocking_ffs=false
+
+# Keep framework modem/network/SIM/voice proxies available for the old HIDL RIL.
+PRODUCT_VENDOR_PROPERTIES += ro.vendor.radio.legacy_hidl=true
+
 # Dalvik heap
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.heapstartsize=16m \
@@ -7,13 +18,16 @@ PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.heapminfree=2m \
     dalvik.vm.heapmaxfree=8m
 
+# Keep the RIL device argument in one Make word. A bare -d consumes the
+# following -c option and makes both Qualcomm processes use the first SIM.
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.extension_library=libqti-perfd-client.so \
-    rild.libpath=/vendor/lib/libril-qc-qmi-1.so \
+    vendor.rild.libpath=/vendor/lib/libril-qc-qmi-1.so \
+    vendor.rild.libargs=-d/dev/smd0 \
     ril.subscription.types=NV,RUIM \
     persist.radio.apm_sim_not_pwdn=0 \
     mmp.enable.3g2=true \
-    debug.stagefright.ccodec=0 \
+    debug.stagefright.ccodec=1 \
     mm.enable.smoothstreaming=true \
     mm.enable.qcom_parser=37491 \
     ro.ril.enable.amr.wideband=1 \
@@ -104,6 +118,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.timed.enable=true \
     persist.sys.wfd.virtual=0 \
 
+# EGL
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.hardware.egl=adreno
+
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.camera.cpp.duplication=false \
     camera2.portability.force_api=1 \
@@ -130,6 +148,17 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.sf.disable_backpressure=1 \
     debug.sf.enable_gl_backpressure=1
 
-# Maintainer
+# S-U Bringup
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.mk.maintainer=guaiyihu
+    ro.kernel.ebpf.supported=false \
+    debug.renderengine.backend=gles \
+    persist.sys.binary_xml=false \
+    ro.soc.manufacturer=QTI \
+    ro.soc.model=MSM8974 \
+    ro.urandom.bypass_entropy_check=true
+
+# This 3.4 kernel has no PSI interface; its cgroup-v1 memory controller does
+# expose memory.pressure_level, which Android 14 lmkd consumes through
+# vmpressure. Select that supported monitor directly instead of probing PSI.
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.lmk.use_psi=false

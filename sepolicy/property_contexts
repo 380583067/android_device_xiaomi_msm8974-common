@@ -1,0 +1,3 @@
+# Both properties configure the same legacy Qualcomm RIL loader.
+vendor.rild.libargs u:object_r:vendor_rild_libpath_prop:s0 exact string
+ro.vendor.radio.legacy_hidl u:object_r:vendor_legacy_radio_prop:s0 exact bool

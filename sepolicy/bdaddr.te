@@ -1,10 +1,16 @@
 type bdaddr, domain;
-type bdaddr_exec, exec_type, file_type;
+typeattribute bdaddr data_between_core_and_vendor_violators;
+type bdaddr_exec, exec_type, vendor_file_type, file_type;
 
 init_daemon_domain(bdaddr)
 
 # Allow bdaddr to communicate with qmuxd via qmux_radio socket
 qmux_socket(bdaddr)
+
+# libqminvapi discovers the modem NV service over the MSM IPC router. Without
+# its control socket, initialization fails before the address query is usable.
+allow bdaddr self:socket create_socket_perms;
+allowxperm bdaddr self:socket ioctl msm_sock_ipc_ioctls;
 
 # Allow access to /data/misc/bluetooth
 allow bdaddr bluetooth_data_file:dir w_dir_perms;
@@ -12,6 +18,19 @@ allow bdaddr bluetooth_data_file:file create_file_perms;
 
 allow bdaddr diag_device:chr_file rw_file_perms;
 
-allow bdaddr self:capability { fsetid dac_override };
+allow bdaddr self:capability { fsetid };
 
 allow bdaddr smem_log_device:chr_file rw_file_perms;
+
+# The hciattach shell runs as the existing firmware-loader domain. Running it
+# as the generic QTI init shell prevents execution of hci_qcomm_init entirely.
+typeattribute bluetooth_loader_exec vendor_file_type;
+domain_trans(init, vendor_shell_exec, bluetooth_loader)
+allow bluetooth_loader vendor_shell_exec:file rx_file_perms;
+allow bluetooth_loader qti_init_shell_exec:file r_file_perms;
+allow bluetooth_loader bluetooth_loader_exec:file rx_file_perms;
+allow bluetooth_loader vendor_toolbox_exec:file rx_file_perms;
+r_dir_file(bluetooth_loader, bluetooth_data_file)
+# The passthrough HAL opens only the two HCI channels labeled by this device.
+allow bluetooth hci_attach_dev:chr_file rw_file_perms;
+allow bluetooth_loader hci_attach_dev:chr_file rw_file_perms;

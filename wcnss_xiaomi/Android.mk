@@ -27,5 +27,7 @@ LOCAL_SHARED_LIBRARIES := libc libcutils libutils liblog libqminvapi
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := libwcnss_qmi
+# libqminvapi is a vendor blob; place this QMI client in the same vendor image.
+LOCAL_VENDOR_MODULE := true
 
 include $(BUILD_SHARED_LIBRARY)

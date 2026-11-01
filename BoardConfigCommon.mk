@@ -48,7 +48,7 @@ BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
 # Audio
 BOARD_USES_ALSA_AUDIO                      := true
 USE_CUSTOM_AUDIO_POLICY                    := 1
-USE_XML_AUDIO_POLICY_CONF := 1
+USE_XML_AUDIO_POLICY_CONF                  := 1
 TARGET_USES_QCOM_MM_AUDIO                  := true
 AUDIO_FEATURE_ENABLED_COMPRESS_VOIP        := true
 AUDIO_FEATURE_ENABLED_EXTENDED_COMPRESS_FORMAT := true
@@ -64,7 +64,9 @@ AUDIO_FEATURE_ENABLED_SPKR_PROTECTION      := true
 AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
 
 # Binder API version
-TARGET_USES_64_BIT_BINDER := true
+# Android 14 uses 64-bit binder IPC by default and no longer consumes the
+# legacy TARGET_USES_64_BIT_BINDER switch. The matching binder devices are
+# explicitly enabled in this device's virgo_defconfig.
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH                        := true
@@ -123,7 +125,10 @@ DEVICE_MANIFEST_FILE := $(PLATFORM_PATH)/manifest.xml
 DEVICE_MATRIX_FILE := $(PLATFORM_PATH)/compatibility_matrix.xml
 
 # Kernel
-BOARD_KERNEL_CMDLINE               := console=none vmalloc=340M androidboot.hardware=qcom msm_rtb.filter=0x3b7 ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1 androidboot.selinux=permissive
+# Use permissive SELinux during the legacy-device bring-up so policy denials
+# are logged without preventing old vendor services from starting. Return to
+# enforcing after the first-boot policy has been validated on the device.
+BOARD_KERNEL_CMDLINE               := console=none vmalloc=340M androidboot.hardware=qcom msm_rtb.filter=0x3b7 ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1 androidboot.selinux=enforcing
 BOARD_RAMDISK_USE_XZ               := true
 BOARD_KERNEL_SEPARATED_DT          := true
 BOARD_KERNEL_BASE                  := 0x00000000
@@ -179,6 +184,8 @@ VENDOR_SECURITY_PATCH := 2017-06-01
 # SELinux
 include device/qcom/sepolicy-legacy/sepolicy.mk
 BOARD_SEPOLICY_DIRS += $(PLATFORM_PATH)/sepolicy
+# The cache logger runs the platform logcat binary in its own core domain.
+SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(PLATFORM_PATH)/sepolicy/private
 
 # Shim
 TARGET_LD_SHIM_LIBS := \

@@ -741,7 +741,10 @@ int32_t mm_stream_fsm_reg(mm_stream_t * my_obj,
 
             pthread_mutex_lock(&my_obj->cmd_lock);
             if (has_cb) {
-                snprintf(my_obj->cmd_thread.threadName, THREAD_NAME_SIZE, "CAM_StrmAppData");
+                /* THREAD_NAME_SIZE reserves one byte for NUL, and the pthread name limit
+                 * exposes at most 14 characters. Keep the same name snprintf previously
+                 * produced after silent truncation so newer Clang fortify checks pass. */
+                snprintf(my_obj->cmd_thread.threadName, THREAD_NAME_SIZE, "CAM_StrmAppDat");
                 mm_camera_cmd_thread_launch(&my_obj->cmd_thread,
                                             mm_stream_dispatch_app_data,
                                             (void *)my_obj);
