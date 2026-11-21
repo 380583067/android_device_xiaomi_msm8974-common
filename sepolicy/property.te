@@ -1,1 +1,2 @@
 vendor_public_prop(legacy_timeadjust_prop)
+vendor_internal_prop(legacy_rndis_extra_prop)

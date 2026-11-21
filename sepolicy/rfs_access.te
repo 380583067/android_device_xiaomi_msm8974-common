@@ -1,0 +1,2 @@
+# Qualcomm IPC Router uses CAP_NET_RAW to authorize bind().
+allow rfs_access self:capability net_raw;

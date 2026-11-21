@@ -20,3 +20,6 @@ get_prop(system_server, vendor_security_patch_level_prop);
 
 allow system_server legacy_system_hal_file:file { read open getattr execute map };
 allow system_server legacy_location_config_file:file r_file_perms;
+
+# The legacy kernel exposes UID traffic controls through xt_qtaguid.
+allow system_server proc_qtaguid_ctrl:file { open write };

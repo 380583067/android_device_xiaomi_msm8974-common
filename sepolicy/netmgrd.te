@@ -1,5 +1,9 @@
 #============= netmgrd ==============
 allow netmgrd self:capability dac_override;
+# The legacy daemon invokes /system/bin/ip.
+allow netmgrd system_file:file { getattr open read execute execute_no_trans map };
+allow netmgrd system_file:file lock;
+allow netmgrd vendor_file:lnk_file r_file_perms;
 # Preserve direct execution for core network tools and the legacy modem daemon.
 allow { netmgrd netd netutils_wrapper shell } legacy_iptables_exec:file { rx_file_perms execute_no_trans };
 allow { netmgrd netd netutils_wrapper shell } legacy_iptables_exec:lnk_file r_file_perms;

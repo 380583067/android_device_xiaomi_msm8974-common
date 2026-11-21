@@ -529,11 +529,13 @@ service qmuxd /vendor/bin/qmuxd
     class main
     user radio
     group radio audio bluetooth gps wakelock oem_2950
+    capabilities BLOCK_SUSPEND
     disabled
 
 service netmgrd /vendor/bin/netmgrd
     class main
     group radio system wakelock
+    setenv PATH /vendor/bin/netmgrd-tools:/product/bin:/apex/com.android.runtime/bin:/apex/com.android.art/bin:/system_ext/bin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin
 
 service sensors /vendor/bin/sensors.qcom
     class late_start

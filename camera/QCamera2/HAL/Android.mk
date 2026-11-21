@@ -58,6 +58,7 @@ LOCAL_SHARED_LIBRARIES += android.hardware.graphics.bufferqueue@1.0
 
 LOCAL_MODULE_RELATIVE_PATH := hw
 LOCAL_MODULE := camera.$(TARGET_BOARD_PLATFORM)
+LOCAL_CFLAGS += -D__user= -DION_USES_HEAP_ID_MASK
 # Legacy non-Treble camera stack depends on private platform libraries.
 # Build and install in system alongside its platform dependencies.
 LOCAL_MODULE_TAGS := optional

@@ -24,12 +24,23 @@ if [[ ! -d "$MY_DIR" ]]; then MY_DIR="$PWD"; fi
 
 MK_ROOT="$MY_DIR"/../../..
 
-HELPER="$MK_ROOT"/vendor/lineage/build/tools/extract_utils.sh
+HELPER="$MK_ROOT"/tools/extract-utils/extract_utils.sh
+if [ ! -f "$HELPER" ]; then
+    HELPER="$MK_ROOT"/vendor/lineage/build/tools/extract_utils.sh
+fi
 if [ ! -f "$HELPER" ]; then
     echo "Unable to find helper script at $HELPER"
     exit 1
 fi
 . "$HELPER"
+
+function blob_fixup() {
+    case "$1" in
+        vendor/lib/libnetmgr.so)
+            python3 "$MY_DIR/fixup-libnetmgr.py" "$2"
+            ;;
+    esac
+}
 
 # Default to sanitizing the vendor folder before extraction
 CLEAN_VENDOR=true

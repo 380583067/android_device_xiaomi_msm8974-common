@@ -1,1 +1,4 @@
 allow rmt_storage sysfs:file { append rw_file_perms };
+
+# Qualcomm IPC Router uses CAP_NET_RAW to authorize bind().
+allow rmt_storage self:capability net_raw;

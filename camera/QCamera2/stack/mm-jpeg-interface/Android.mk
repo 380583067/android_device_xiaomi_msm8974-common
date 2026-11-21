@@ -33,6 +33,7 @@ LOCAL_SRC_FILES := \
     src/mm_jpegdec.c
 
 LOCAL_MODULE := libmmjpeg_interface
+LOCAL_CFLAGS += -D__user= -DION_USES_HEAP_ID_MASK
 LOCAL_SHARED_LIBRARIES := libdl libcutils liblog libqomx_core
 LOCAL_MODULE_TAGS := optional
 # Legacy non-Treble camera stack depends on private platform libraries.

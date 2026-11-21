@@ -5,3 +5,4 @@ allow vendor_init wifi_data_file:file {create_file_perms};
 allow vendor_init wpa_socket:dir { setattr getattr rw_dir_perms };
 allow vendor_init bluetooth_data_file:file { setattr rw_file_perms };
 allow vendor_init firmware_file:dir rw_dir_perms;
+get_prop(vendor_init, legacy_rndis_extra_prop)

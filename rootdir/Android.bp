@@ -1,0 +1,6 @@
+install_symlink {
+    name: "msm8974-netmgrd-ndc",
+    vendor: true,
+    installed_location: "bin/netmgrd-tools/ndc",
+    symlink_target: "/system/bin/ndc-wrapper-1.0",
+}

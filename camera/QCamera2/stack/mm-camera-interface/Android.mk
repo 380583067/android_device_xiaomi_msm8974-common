@@ -16,6 +16,7 @@ ifeq ($(call is-board-platform-in-list, msm8974 msm8226 msm8610),true)
 endif
 
 LOCAL_CFLAGS += -D_ANDROID_
+LOCAL_CFLAGS += -D__user=
 
 LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/inc \

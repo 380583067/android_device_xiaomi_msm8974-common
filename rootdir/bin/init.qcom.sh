@@ -39,12 +39,14 @@ start_sensors()
 {
     if [ -c /dev/msm_dsps -o -c /dev/sensors ]; then
         mkdir -p /data/misc/sensors
-        chmod -h 775 /data/misc/sensors
+        chmod 775 /data/misc/sensors
         mkdir -p /persist/misc/sensors
+        # The sensor daemon drops root and needs to traverse this directory.
+        chmod 711 /persist/misc
         chmod 775 /persist/misc/sensors
 
         touch /persist/misc/sensors/settings
-        chmod -h 664 /data/system/sensors/settings
+        chmod 644 /persist/misc/sensors/settings
         chown -h system /persist/misc/sensors/settings
 
         if [ ! -s /persist/misc/sensors/settings ]; then

@@ -101,28 +101,28 @@ esac
 #
 # Add changes to support diag with rndis
 #
-diag_extra=`getprop persist.sys.usb.config.extra`
+diag_extra=`getprop persist.vendor.usb.config.extra`
 case "$diag_extra" in
 	"diag" | "diag,diag_mdm" | "diag,diag_mdm,diag_qsc")
 		case "$baseband" in
 			"mdm")
-				setprop persist.sys.usb.config.extra diag,diag_mdm
+				setprop persist.vendor.usb.config.extra diag,diag_mdm
 			;;
 		        "dsda" | "sglte2" )
-				setprop persist.sys.usb.config.extra diag,diag_mdm,diag_qsc
+				setprop persist.vendor.usb.config.extra diag,diag_mdm,diag_qsc
 			;;
 		        "sglte")
-				setprop persist.sys.usb.config.extra diag,diag_qsc
+				setprop persist.vendor.usb.config.extra diag,diag_qsc
 			;;
 		        "dsda2")
-				setprop persist.sys.usb.config.extra diag,diag_mdm,diag_mdm2
+				setprop persist.vendor.usb.config.extra diag,diag_mdm,diag_mdm2
 			;;
 		        *)
-				setprop persist.sys.usb.config.extra diag
+				setprop persist.vendor.usb.config.extra diag
 			;;
 	        esac
 	;;
         *)
-		setprop persist.sys.usb.config.extra none
+		setprop persist.vendor.usb.config.extra none
 	;;
 esac

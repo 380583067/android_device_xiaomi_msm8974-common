@@ -200,9 +200,10 @@ BOARD_SEPOLICY_DIRS += $(PLATFORM_PATH)/sepolicy
 SELINUX_IGNORE_NEVERALLOWS := true
 
 # Shims
+# These are the canonical paths on the system partition (/vendor is a symlink).
 TARGET_LD_SHIM_LIBS := \
-    /system/vendor/lib/libril-qc-qmi-1.so|libaudioclient_shim.so \
-    /system/vendor/lib/libmm-abl.so|libshims_thermal.so
+    /system/vendor/lib/libril-qc-qmi-1.so|libaudioclient_shim.so|exact \
+    /system/vendor/lib/libmm-abl.so|libshims_thermal.so|exact
 
 # Time service
 BOARD_USES_QC_TIME_SERVICES := true

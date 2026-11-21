@@ -243,6 +243,7 @@ PRODUCT_COPY_FILES += \
 
 # QCOM Config Script
 PRODUCT_PACKAGES += \
+    msm8974-netmgrd-ndc \
     changepowermode.sh \
     init.qcom.bt.sh \
     init.class_main.sh \
