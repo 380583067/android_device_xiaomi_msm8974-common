@@ -26,3 +26,5 @@
 /dev/block/zram0                                    none             swap    defaults                                                                    zramsize=533413200,max_comp_streams=4,notrim
 
 /devices/platform/xhci-hcd/usb1*                     auto            auto    defaults                                                        voldmanaged=usbotg:auto
+# DWC3 creates xHCI below the controller with dynamic instance and bus numbers.
+/devices/msm_dwc3/f9200000.dwc3/xhci-hcd.*/usb*       auto            auto    defaults                                                        voldmanaged=usbotg:auto
