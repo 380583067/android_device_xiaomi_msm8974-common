@@ -1,3 +1,9 @@
 # Readable by the framework radio process, writable only on the vendor side.
 vendor_restricted_prop(vendor_legacy_radio_prop)
 set_prop(vendor_init, vendor_legacy_radio_prop)
+
+# Configure legacy RNDIS diagnostic functions through a vendor-owned property.
+vendor_restricted_prop(legacy_rndis_extra_prop)
+get_prop(vendor_init, legacy_rndis_extra_prop)
+get_prop(qti_init_shell, legacy_rndis_extra_prop)
+set_prop(qti_init_shell, legacy_rndis_extra_prop)
